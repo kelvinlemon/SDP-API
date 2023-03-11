@@ -996,7 +996,7 @@ router.delete('/deletecustomerhistory/:historyid', async (req, res) => {
 }*/
 
 /* "To order" page data ------------------------------------------------------*/
-router.get('/toorder/:table/:session', async (req, res) => {
+router.get('/toorder/:table', async (req, res) => {
     var db = req.db;
     var menu = db.get('menuList');
 	var tableinfo = db.get('tableList');
