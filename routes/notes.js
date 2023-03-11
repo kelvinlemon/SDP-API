@@ -1073,22 +1073,27 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 	if (Object.keys(req.body).length != 1){
 		isValid = false;
 	}
-	if (isValid){
-		var doc = await tableinfo.find({table:table});
-		if (doc[0]['status'] != '0'){
-			if (doc[0]['orderedFood'] != ""){
-				order = doc[0]["orderedFood"] + " " + order;
+	var tableValidCheck = await tableinfo.find({session:session});
+	if (tableValidCheck){
+		if (isValid){
+			var doc = await tableinfo.find({table:table});
+			if (doc[0]['status'] != '0'){
+				if (doc[0]['orderedFood'] != ""){
+					order = doc[0]["orderedFood"] + " " + order;
+				}
+				tableinfo.update({table:table},{$set:{orderedFood:order}}).then(()=>{
+					res.json("Submitted");
+				}).catch((err)=>{
+					res.send(err)
+				})
+			}else{
+				res.json("Table "+ table +" is disabled!");
 			}
-			tableinfo.update({table:table},{$set:{orderedFood:order}}).then(()=>{
-				res.json("Submitted");
-			}).catch((err)=>{
-				res.send(err)
-			})
 		}else{
-			res.json("Table "+ table +" is disabled!");
+			res.json("Order can't be empty");
 		}
 	}else{
-		res.json("Order can't be empty")
+		res.json("session has disbled!");
 	}
 });
 
