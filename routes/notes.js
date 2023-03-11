@@ -1023,9 +1023,11 @@ router.get('/ordered/:table', async (req, res) => {
     var send= [];
 
     var table = req.params.table;
+
+	var session = req.body.session;
 	
     var doc = await tableinfo.find({table:table});
-	if (doc[0]['status'] != '0'){
+	if (doc[0]['status'] != '0' && doc[0]['sessionCode'] == session){
 		var isValid= true;
 		if (!doc[0]['orderedFood'] || doc[0]['orderedFood'].trim() === '' || doc[0]['orderedFood'] == "undefined") {
 			isValid = false;
@@ -1048,7 +1050,7 @@ router.get('/ordered/:table', async (req, res) => {
 			res.json("No ordered food");
 		}
 	}else{
-		res.json("Table "+ table +" is disabled!");
+		res.json("Table "+ table +" is disabled or sessionCode is invalid!");
 	}
 });
 
