@@ -1097,7 +1097,7 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 			res.json("Order can't be empty");
 		}
 	}else{
-		res.json("session has expired!");
+		res.json("session has expired! "+ tableValidCheck);
 	}
 });
 
