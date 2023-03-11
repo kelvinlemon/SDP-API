@@ -1059,9 +1059,9 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 	var tableinfo = db.get('tableList');
 
     var table = req.params.table;
-	var session = req.params.session;
 
 	var order = req.body.order; // order data should be arrage like, data: {"order": "_id 1 _id 2"}
+	var session = req.body.session;
 	
 	var isValid = true;
 	for (var key in req.body) {
