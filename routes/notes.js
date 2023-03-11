@@ -1073,8 +1073,8 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 	if (Object.keys(req.body).length != 1){
 		isValid = false;
 	}
-	var tableValidCheck = await tableinfo.find({session:session});
-	if (tableValidCheck){
+	var tableValidCheck = await tableinfo.find({table: table, session:session});
+	if (tableValidCheck.length != 0){
 		if (isValid){
 			var doc = await tableinfo.find({table:table});
 			if (doc[0]['status'] != '0'){
