@@ -1054,7 +1054,7 @@ router.get('/ordered/:table/:session', async (req, res) => {
 });
 
 /* "Submit" request ------------------------------------------------------*/
-router.post('/submit/:table/:session', express.urlencoded({ extended: true }), async (req, res) => {
+router.post('/submit/:table', express.urlencoded({ extended: true }), async (req, res) => {
     var db = req.db;
 	var tableinfo = db.get('tableList');
 
