@@ -189,7 +189,7 @@ router.get('/enable/:table', (req, res) => {
 				var random6Number = generateRandomNumberString();
 				tableinfo.update({table:table},{$set:{orderedFood:"", time:formatTime(), status:"1", sessionCode: random6Number}}).then(()=>{
 					send.push({"orderURL":'/toorder/'+random6Number});
-					res.json('enabled');
+					res.json(send);
 				}).catch((error)=>{
 					res.json(error);
 				})
