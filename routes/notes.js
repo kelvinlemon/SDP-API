@@ -1082,7 +1082,7 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 					order = doc[0]["orderedFood"] + " " + order;
 				}
 				tableinfo.update({table:table},{$set:{orderedFood:order}}).then(()=>{
-					res.json("Submitted");
+					res.json(tableValidCheck);
 				}).catch((err)=>{
 					res.send(err)
 				})
