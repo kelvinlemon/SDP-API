@@ -1016,7 +1016,7 @@ router.get('/toorder/:table/:session', async (req, res) => {
 
 
 /* "Ordered" page data ------------------------------------------------------*/
-router.get('/ordered/:table', async (req, res) => {
+router.post('/ordered/:table', async (req, res) => {
     var db = req.db;
     var menuList = db.get('menuList');
 	var tableinfo = db.get('tableList');
