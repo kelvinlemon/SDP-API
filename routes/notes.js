@@ -1073,8 +1073,12 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 	if (Object.keys(req.body).length != 1){
 		isValid = false;
 	}
-	var tableValidCheck = await tableinfo.find({table: table, session:session});
+	var tableValidCheck = await tableinfo.find({session:session});
+	
 	if (tableValidCheck.length != 0){
+		if (tableValidCheck[0]['table'].length != table){
+			isValid = false;
+		}
 		if (isValid){
 			var doc = await tableinfo.find({table:table});
 			if (doc[0]['status'] != '0'){
@@ -1093,7 +1097,7 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 			res.json("Order can't be empty");
 		}
 	}else{
-		res.json("session has disbled!");
+		res.json("session has expired!");
 	}
 });
 
