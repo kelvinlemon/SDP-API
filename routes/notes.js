@@ -1016,14 +1016,13 @@ router.get('/toorder/:table/:session', async (req, res) => {
 
 
 /* "Ordered" page data ------------------------------------------------------*/
-router.get('/ordered/:table/:session', async (req, res) => {
+router.get('/ordered/:table', async (req, res) => {
     var db = req.db;
     var menuList = db.get('menuList');
 	var tableinfo = db.get('tableList');
     var send= [];
 
     var table = req.params.table;
-	var session = req.params.session;
 	
     var doc = await tableinfo.find({table:table});
 	if (doc[0]['status'] != '0'){
