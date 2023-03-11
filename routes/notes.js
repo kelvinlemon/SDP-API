@@ -180,12 +180,15 @@ router.get('/enablepage', (req, res) => {
 router.get('/enable/:table', (req, res) => {
 	var db = req.db;
 	var tableinfo = db.get('tableList');
+	var send = [];
 
 	var table = req.params.table;
 	if (req.cookies.managerId){
 		tableinfo.find({table:table}).then((docs)=>{
 			if (docs[0]["status"] != "1" && docs[0] != ""){
-				tableinfo.update({table:table},{$set:{orderedFood:"", time:formatTime(), status:"1", sessionCode: generateRandomNumberString()}}).then(()=>{
+				var random6Number = generateRandomNumberString();
+				tableinfo.update({table:table},{$set:{orderedFood:"", time:formatTime(), status:"1", sessionCode: random6Number}}).then(()=>{
+					send.push({"orderURL":'/toorder/'+random6Number});
 					res.json('enabled');
 				}).catch((error)=>{
 					res.json(error);
