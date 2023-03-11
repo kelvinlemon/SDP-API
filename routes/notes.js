@@ -1076,7 +1076,7 @@ router.post('/submit/:table', express.urlencoded({ extended: true }), async (req
 	var tableValidCheck = await tableinfo.find({sessionCode:session});
 	
 	if (tableValidCheck.length != 0){
-		if (tableValidCheck[0]['table'].length != table){
+		if (tableValidCheck[0]['table'] != table){
 			isValid = false;
 		}
 		if (isValid){
@@ -1094,7 +1094,7 @@ router.post('/submit/:table', express.urlencoded({ extended: true }), async (req
 				res.json("Table "+ table +" is disabled!");
 			}
 		}else{
-			res.json("Order can't be empty");
+			res.json("Order can't be empty or table number is not matched!");
 		}
 	}else{
 		res.json("session has expired! "+ tableValidCheck);
