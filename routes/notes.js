@@ -28,9 +28,9 @@ function formatTime(){
 	hour = ''+hour;
 	min = ''+min;
 	second = ''+second;
-	day = ''+weekday;
+	weekday = ''+weekday;
 	month = ''+month;
-	date = ''+day;
+	//date = ''+day;
 	year = ''+year;
 	
 	if (hour.length < 2){
@@ -129,7 +129,8 @@ function formatTime(){
 	if (date < 10){
 		date = "0" +date;
 	}
-	return `${hour}:${min}:${second} 1 ${day} ${month} ${date} ${year}`;
+	return `${timestamp} ${date}`
+	//return `${hour}:${min}:${second} ${day} ${month} ${date} ${year}`;
 
 }
 
