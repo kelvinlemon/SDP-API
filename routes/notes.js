@@ -36,7 +36,7 @@ function formatTime(){
 
 	var date2 = new Date(parseInt(year), parseInt(month)-1, parseInt(date)); // Month value is zero-based
 	var options = { weekday: 'long' };
-	var weekday = date.toLocaleDateString('en-US', options);
+	var weekday = date2.toLocaleDateString('en-US', options);
 	weekday = ''+weekday;
 
 	
