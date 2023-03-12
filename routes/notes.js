@@ -35,7 +35,7 @@ function formatTime(){
 	year = ''+year;
 
 	var date2 = new Date(parseInt(year), parseInt(month)-1, parseInt(date)); // Month value is zero-based
-	var options = { weekday: 'numeric' };
+	var options = { weekday: 'long' };
 	var weekday = date2.toLocaleDateString('en-US', options);
 	weekday = ''+weekday;
 
@@ -51,31 +51,31 @@ function formatTime(){
 	}
 
 	switch (weekday){
-		case '1':{
+		case 'Monday':{
 			weekday = 'Mon';
 			break;
 		}
-		case '2':{
+		case 'Tuesday':{
 			weekday = 'Tue';
 			break;
 		}
-		case '3':{
+		case 'Wednesday':{
 			weekday = 'Wed';
 			break;
 		}
-		case '4':{
+		case 'Thursday':{
 			weekday = 'Thur';
 			break;
 		}
-		case '5':{
+		case 'Friday':{
 			weekday = 'Fri';
 			break;
 		}
-		case '6':{
+		case 'Saturday':{
 			weekday = 'Sat';
 			break;
 		}
-		case '0':{
+		case 'Sunday':{
 			weekday = 'Sun';
 			break;
 		}
