@@ -19,7 +19,7 @@ function formatTime(){
     var date = parts[0];
     var timestamp = parts[1];
     var [hour, min, second] = timestamp.split(":");
-    var [ma, weekday, month, day, year] = date.split("/");
+    var [weekday, month, day, year] = date.split("/");
     month = parseInt(month) - 1;
 
 
@@ -30,7 +30,7 @@ function formatTime(){
 	second = ''+second;
 	weekday = ''+weekday;
 	month = ''+month;
-	//date = ''+day;
+	date = ''+day;
 	year = ''+year;
 	
 	if (hour.length < 2){
@@ -43,33 +43,33 @@ function formatTime(){
 		second = '0'+second;
 	}
 
-	switch (day){
+	switch (weekday){
 		case '1':{
-			day = 'Mon';
+			weekday = 'Mon';
 			break;
 		}
 		case '2':{
-			day = 'Tue';
+			weekday = 'Tue';
 			break;
 		}
 		case '3':{
-			day = 'Wed';
+			weekday = 'Wed';
 			break;
 		}
 		case '4':{
-			day = 'Thur';
+			weekday = 'Thur';
 			break;
 		}
 		case '5':{
-			day = 'Fri';
+			weekday = 'Fri';
 			break;
 		}
 		case '6':{
-			day = 'Sat';
+			weekday = 'Sat';
 			break;
 		}
 		case '0':{
-			day = 'Sun';
+			weekday = 'Sun';
 			break;
 		}
 		default: break;
@@ -129,8 +129,7 @@ function formatTime(){
 	if (date < 10){
 		date = "0" +date;
 	}
-	return `${timestamp} ${date}`
-	//return `${hour}:${min}:${second} ${day} ${month} ${date} ${year}`;
+	return `${hour}:${min}:${second} ${weekday} ${month} ${date} ${year}`;
 
 }
 
