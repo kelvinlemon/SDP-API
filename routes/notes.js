@@ -47,7 +47,7 @@ function formatTime(){
 			day = 'Sat';
 			break;
 		}
-		case '7':{
+		case '0':{
 			day = 'Sun';
 			break;
 		}
@@ -949,20 +949,24 @@ router.post('/addcustomerhistory', async (req, res) => {
 	if (Object.keys(req.body).length != 1){
 		isValid = false;
 	}
+
+	if (foodId.length != 24){
+		isValid = false;
+	}
 	
 	if (req.cookies.userId){
 		if (isValid){
 			var foodFind = await menuList.find({_id:foodId});
-			//if (foodFind.length != 0){
+			if (foodFind.length != 0){
 				var userName = await userList.find({_id:req.cookies.userId});
 				userHistory.insert({"userName":userName[0]['userName'], "history":foodId, "time":formatTime()}).then(()=>{
 					res.json(foodFind);
 				}).catch((error)=>{res.json(error)});
-			//}else{
-			//	res.json('Invalid food ID!');
-			//};
+			}else{
+				res.json('Invalid food ID!');
+			};
 		}else{
-			res.json("foodid cannot be empty!");
+			res.json("foodid cannot be empty! or foodid need to with 24char!");
 		}
 	}else{
 		res.json("Haven't login, can't add customer history");
