@@ -952,15 +952,15 @@ router.post('/addcustomerhistory', async (req, res) => {
 	
 	if (req.cookies.userId){
 		if (isValid){
-			var foodFind = await menuList.find({_id:foodId});
-			if (foodFind.length != 0){
+			//var foodFind = await menuList.find({_id:foodId});
+			//if (foodFind.length != 0){
 				var userName = await userList.find({_id:req.cookies.userId});
 				userHistory.insert({"userName":userName[0]['userName'], "history":foodId, "time":formatTime()}).then(()=>{
 					res.json("Added customer history");
 				}).catch((error)=>{res.json(error)});
-			}else{
-				res.json('Invalid food ID!');
-			}
+			//}else{
+			//	res.json('Invalid food ID!');
+			//};
 		}else{
 			res.json("foodid cannot be empty!");
 		}
