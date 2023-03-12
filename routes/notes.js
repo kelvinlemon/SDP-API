@@ -19,7 +19,7 @@ function formatTime(){
     var date = parts[0];
     var timestamp = parts[1];
     var [hour, min, second] = timestamp.split(":");
-    var [weekday, month, day, year] = date.split("/");
+    var [ma, weekday, month, day, year] = date.split("/");
     month = parseInt(month) - 1;
 
 
@@ -129,7 +129,7 @@ function formatTime(){
 	if (date < 10){
 		date = "0" +date;
 	}
-	return `${hour}:${min}:${second} ${day} ${month} ${date} ${year}`;
+	return `${hour}:${min}:${second} 1 ${day} ${month} ${date} ${year}`;
 
 }
 
