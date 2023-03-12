@@ -4,6 +4,17 @@ var router = express.Router()
 
 function formatTime(){
 	let time = new Date();
+    var options = { 
+        timeZone: 'Asia/Hong_Kong', 
+        hour: 'numeric', 
+        minute: 'numeric', 
+        second: 'numeric',
+        day: 'numeric',
+        month: 'numeric',
+        year: 'numeric'
+    };
+    time = time.toLocaleString('en-US', options);
+
 	var hour = ''+time.getHours();
 	var min = ''+time.getMinutes();
 	var second = ''+time.getSeconds();
