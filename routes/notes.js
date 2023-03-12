@@ -18,20 +18,27 @@ function formatTime(){
 	var parts = time.split(", ");
     var date = parts[0];
     var timestamp = parts[1];
-    var [hour, min, second] = timestamp.split(":");
-    var [weekday, month, day, year] = date.split("/");
+	timestamp = timestamp.split(" ");
+    var [hour, min, second] = timestamp[0].split(":");
+    var [month, day, year] = date.split("/");
     month = parseInt(month) - 1;
 
-
-
+	if (timestamp[1] == 'PM' && parseInt(hour) != 12){
+		hour = parseInt(hour)+12;
+	}
 
 	hour = ''+hour;
 	min = ''+min;
 	second = ''+second;
-	weekday = ''+weekday;
 	month = ''+month;
 	date = ''+day;
 	year = ''+year;
+
+	var date2 = new Date(parseInt(year), parseInt(month)-1, parseInt(date)); // Month value is zero-based
+	var options = { weekday: 'long' };
+	var weekday = date.toLocaleDateString('en-US', options);
+	weekday = ''+weekday;
+
 	
 	if (hour.length < 2){
 		hour = '0'+hour;
