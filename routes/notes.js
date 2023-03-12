@@ -15,13 +15,23 @@ function formatTime(){
     };
     time = time.toLocaleString('en-US', options);
 
-	var hour = ''+time.getHours();
-	var min = ''+time.getMinutes();
-	var second = ''+time.getSeconds();
-	var day = ''+time.getDay();
-	var month = ''+time.getMonth();
-	var date = ''+time.getDate();
-	var year = ''+time.getFullYear();
+	var parts = time.split(", ");
+    var date = parts[0];
+    var timestamp = parts[1];
+    var [hour, min, second] = timestamp.split(":");
+    var [weekday, month, day, year] = date.split("/");
+    month = parseInt(month) - 1;
+
+
+
+
+	hour = ''+hour;
+	min = ''+min;
+	second = ''+second;
+	day = ''+weekday;
+	month = ''+month;
+	date = ''+day;
+	year = ''+year;
 	
 	if (hour.length < 2){
 		hour = '0'+hour;
