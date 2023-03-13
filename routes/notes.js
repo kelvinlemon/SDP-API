@@ -159,7 +159,7 @@ router.post('/rsignin', express.urlencoded({ extended: true }), (req, res) => {
 			}
 			else{
 				if( pwd == docs[0]["password"]){
-					var milliseconds = 30 * 30000;
+					var milliseconds = 60 * 30000;
 					res.cookie('managerId', docs[0]["_id"], { maxAge: milliseconds });
 					req.session.userId = ''+docs[0]["_id"];
 					req.session.name = docs[0]['name'];	
@@ -222,7 +222,7 @@ router.get('/enable/:table', (req, res) => {
 					res.json(error);
 				})
 			}else{
-				res.json('Already enable');
+				res.json({"AlreadyEnabledWithURL":'/toorder/'+docs[0]['table']+'/'+docs[0]['sessionCode']});
 			}
 		}).catch((error)=>{
 			res.json(error);
@@ -590,7 +590,7 @@ router.post('/csignin', express.urlencoded({ extended: true }), (req, res) => {
 			}
 			else{
 				if( pwd == docs[0]["password"]){
-					var milliseconds = 30 * 30000;
+					var milliseconds = 60 * 30000;
 					res.cookie('userId', docs[0]["_id"], { maxAge: milliseconds });
 					req.session.userId = ''+docs[0]["_id"];
 					req.session.name = docs[0]['userName'];		
