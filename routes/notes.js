@@ -1125,50 +1125,66 @@ function foodAddArrange(docs, order){
 }
 
 /* "Submit" request ------------------------------------------------------*/
-router.post('/submit/:table', express.urlencoded({ extended: true }), async (req, res) => {
+router.post('/submit/:table/:session', express.urlencoded({ extended: true }), async (req, res) => {
     var db = req.db;
 	var tableinfo = db.get('tableList');
 
     var table = req.params.table;
+	var session = req.params.session;
 
 	var order = req.body.order; // order data should be arrage like, data: {"order": "_id 1 _id 2"}
-	var session = req.body.session;
+	
 	
 	var isValid = true;
+	var isValid2 =true;
 	for (var key in req.body) {
 		if (!req.body[key] || req.body[key].trim() === '') {
 			isValid = false;
 			break;
 		}
 	}
-	if (Object.keys(req.body).length != 2){
+	if (Object.keys(req.body).length != 1){
 		isValid = false;
 	}
-	var tableValidCheck = await tableinfo.find({sessionCode:session});
-	
-	if (tableValidCheck.length != 0){
-		if (tableValidCheck[0]['table'] != table){
-			isValid = false;
+
+	for (var key in req.params) {
+		if (!req.params[key] || req.params[key].trim() === '') {
+			isValid2 = false;
+			break;
 		}
-		if (isValid){
-			var doc = await tableinfo.find({table:table});
-			if (doc[0]['status'] != '0'){
-				if (doc[0]['orderedFood'] != ""){
-					order = foodAddArrange(doc[0]["orderedFood"], order);
+	}
+	if (Object.keys(req.params).length != 2){
+		isValid2 = false;
+	}
+	if (isValid2){
+		var tableValidCheck = await tableinfo.find({sessionCode:session});
+		
+		if (tableValidCheck.length != 0){
+			if (tableValidCheck[0]['table'] != table){
+				isValid = false;
+			}
+			if (isValid){
+				var doc = await tableinfo.find({table:table});
+				if (doc[0]['status'] != '0'){
+					if (doc[0]['orderedFood'] != ""){
+						order = foodAddArrange(doc[0]["orderedFood"], order);
+					}
+					tableinfo.update({table:table},{$set:{orderedFood:order}}).then(()=>{
+						res.json("submitted");
+					}).catch((err)=>{
+						res.send(err)
+					})
+				}else{
+					res.json("Table "+ table +" is disabled!");
 				}
-				tableinfo.update({table:table},{$set:{orderedFood:order}}).then(()=>{
-					res.json("submitted");
-				}).catch((err)=>{
-					res.send(err)
-				})
 			}else{
-				res.json("Table "+ table +" is disabled!");
+				res.json("Order can't be empty or table number is not valid!");
 			}
 		}else{
-			res.json("Order can't be empty or table number is not valid!");
+			res.json("session has expired! ");
 		}
 	}else{
-		res.json("session has expired! "+ tableValidCheck);
+		res.json('session cannot be empty!')
 	}
 });
 
