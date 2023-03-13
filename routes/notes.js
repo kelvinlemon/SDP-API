@@ -1153,7 +1153,7 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 		isValid2 =false;
 	}
 	  
-	if (isValid2){
+	/*if (isValid2){
 		var tableValidCheck = await tableinfo.find({sessionCode:session});
 		
 		if (tableValidCheck.length != 0){
@@ -1180,9 +1180,9 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 		}else{
 			res.json("session has expired! ");
 		}
-	}else{
-		res.json('session or table cannot be empty! bad request')
-	}
+	}else{*/
+		res.json('session or table cannot be empty! bad request ' + session);
+	//}
 });
 
 module.exports = router;
