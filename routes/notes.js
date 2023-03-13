@@ -1090,6 +1090,39 @@ router.post('/ordered/:table', async (req, res) => {
 	}
 });
 
+function foodAddArrange(docs, order){
+	var newOrder = '';
+	var returnOrder  = '';
+	var orderAdd = order.split(" ");
+	var originFood = docs.split(" ");
+
+	for (let i = 0; i < orderAdd.length; i += 2){
+		var add = false;
+		for(let j = 0; j < originFood.length; i+=2){
+			if (orderAdd[i] == originFood[j]){
+				originFood[j+1] = praseInt(originFood[j+1]) + praseInt(orderAdd[i+1])
+				add = true;
+			}
+		}
+		if (add != true){
+			if (newOrder.length == ''){
+				newOrder = orderAdd[i] + ' ' + orderAdd[i+1];
+			}else{
+				newOrder = newOrder + ' ' + orderAdd[i] + ' ' + orderAdd[i+1];
+			}
+		}
+	}
+
+	returnOrder = originFood[0]+ ' ' + originFood[1];
+	for (let i = 2; i < originFood.length; i+=2){
+		returnOrder = returnOrder + ' ' + originFood[i] + ' ' +originFood[i+1];
+	}
+	returnOrder = returnOrder + ' ' + newOrder;
+
+	return returnOrder;
+
+}
+
 /* "Submit" request ------------------------------------------------------*/
 router.post('/submit/:table', express.urlencoded({ extended: true }), async (req, res) => {
     var db = req.db;
@@ -1120,7 +1153,8 @@ router.post('/submit/:table', express.urlencoded({ extended: true }), async (req
 			var doc = await tableinfo.find({table:table});
 			if (doc[0]['status'] != '0'){
 				if (doc[0]['orderedFood'] != ""){
-					order = doc[0]["orderedFood"] + " " + order;
+
+					order = foodAddArrange(doc[0]["orderedFood"], order);
 				}
 				tableinfo.update({table:table},{$set:{orderedFood:order}}).then(()=>{
 					res.json("submitted");
