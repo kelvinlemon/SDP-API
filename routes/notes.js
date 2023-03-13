@@ -216,7 +216,7 @@ router.get('/enable/:table', (req, res) => {
 			if (docs[0]["status"] != "1" && docs[0] != ""){
 				var random6Number = generateRandomNumberString();
 				tableinfo.update({table:table},{$set:{orderedFood:"", time:formatTime(), status:"1", sessionCode: random6Number}}).then(()=>{
-					send.push({"sessionCode":random6Number});
+					send.push({"URL":'/toorder/'+table+'/'+random6Number});
 					res.json(send);
 				}).catch((error)=>{
 					res.json(error);
@@ -1032,7 +1032,7 @@ router.delete('/deletecustomerhistory/:historyid', async (req, res) => {
 }*/
 
 /* "To order" page data ------------------------------------------------------*/
-router.get('/toorder/:table', async (req, res) => {
+router.get('/toorder/:table/:session', async (req, res) => {
     var db = req.db;
     var menu = db.get('menuList');
 	var tableinfo = db.get('tableList');
@@ -1044,6 +1044,8 @@ router.get('/toorder/:table', async (req, res) => {
     var doc = await tableinfo.find({table:table});
 	if (doc[0]['status'] != '0'){
 		send = await menu.find({});
+		var milliseconds = 10800000;
+		res.cookie('session', session, { maxAge: milliseconds });
 		res.json(send);
 	}else{
 		res.json("Table "+ table +" is disabled!");
@@ -1052,7 +1054,7 @@ router.get('/toorder/:table', async (req, res) => {
 
 
 /* "Ordered" page data ------------------------------------------------------*/
-router.post('/ordered/:table', async (req, res) => {
+router.post('/ordered/:table/:session', async (req, res) => {
     var db = req.db;
     var menuList = db.get('menuList');
 	var tableinfo = db.get('tableList');
@@ -1060,7 +1062,9 @@ router.post('/ordered/:table', async (req, res) => {
 
     var table = req.params.table;
 
-	var session = req.body.session;
+	var session = req.params.session;
+	var milliseconds = 10800000;
+	res.cookie('session', session, { maxAge: milliseconds });
 	
     var doc = await tableinfo.find({table:table});
 	if (doc[0]['status'] != '0' && doc[0]['sessionCode'] == session){
@@ -1133,10 +1137,10 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 	var session = req.params.session;
 
 	var order = req.body.order; // order data should be arrage like, data: {"order": "_id 1 _id 2"}
-	
+	var milliseconds = 10800000;
+	res.cookie('session', session, { maxAge: milliseconds });
 	
 	var isValid = true;
-	var isValid2 =true;
 	for (var key in req.body) {
 		if (!req.body[key] || req.body[key].trim() === '') {
 			isValid = false;
@@ -1146,43 +1150,33 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 	if (Object.keys(req.body).length != 1){
 		isValid = false;
 	}
-
-	if (table && session && table.trim() !== '' && session.trim() !== '') {
-		// your code here
-	}else {
-		isValid2 =false;
-	}
 	  
-	/*if (isValid2){
-		var tableValidCheck = await tableinfo.find({sessionCode:session});
-		
-		if (tableValidCheck.length != 0){
-			if (tableValidCheck[0]['table'] != table){
-				isValid = false;
-			}
-			if (isValid){
-				var doc = await tableinfo.find({table:table});
-				if (doc[0]['status'] != '0'){
-					if (doc[0]['orderedFood'] != ""){
-						order = foodAddArrange(doc[0]["orderedFood"], order);
-					}
-					tableinfo.update({table:table},{$set:{orderedFood:order}}).then(()=>{
-						res.json("submitted");
-					}).catch((err)=>{
-						res.send(err)
-					})
-				}else{
-					res.json("Table "+ table +" is disabled!");
+	var tableValidCheck = await tableinfo.find({sessionCode:session});
+	
+	if (tableValidCheck.length != 0){
+		if (tableValidCheck[0]['table'] != table){
+			isValid = false;
+		}
+		if (isValid){
+			var doc = await tableinfo.find({table:table});
+			if (doc[0]['status'] != '0'){
+				if (doc[0]['orderedFood'] != ""){
+					order = foodAddArrange(doc[0]["orderedFood"], order);
 				}
+				tableinfo.update({table:table},{$set:{orderedFood:order}}).then(()=>{
+					res.json("submitted");
+				}).catch((err)=>{
+					res.send(err)
+				})
 			}else{
-				res.json("Order can't be empty or table number is not valid!");
+				res.json("Table "+ table +" is disabled!");
 			}
 		}else{
-			res.json("session has expired! ");
+			res.json("Order can't be empty or table number is not valid!");
 		}
-	}else{*/
-		res.json('session or table cannot be empty! bad request ' + session);
-	//}
+	}else{
+		res.json("session has expired! ");
+	}
 });
 
 module.exports = router;
