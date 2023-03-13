@@ -1105,7 +1105,7 @@ function foodAddArrange(docs, order){
 			}
 		}
 		if (add != true){
-			if (newOrder.length == ''){
+			if (newOrder == ''){
 				newOrder = orderAdd[i] + ' ' + orderAdd[i+1];
 			}else{
 				newOrder = newOrder + ' ' + orderAdd[i] + ' ' + orderAdd[i+1];
