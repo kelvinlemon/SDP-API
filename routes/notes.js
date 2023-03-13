@@ -1098,7 +1098,7 @@ function foodAddArrange(docs, order){
 
 	for (let i = 0; i < orderAdd.length; i += 2){
 		var add = false;
-		for(let j = 0; j < originFood.length; i+=2){
+		for(let j = 0; j < originFood.length; j+=2){
 			if (orderAdd[i] == originFood[j]){
 				originFood[j+1] = praseInt(originFood[j+1]) + praseInt(orderAdd[i+1])
 				add = true;
@@ -1153,7 +1153,6 @@ router.post('/submit/:table', express.urlencoded({ extended: true }), async (req
 			var doc = await tableinfo.find({table:table});
 			if (doc[0]['status'] != '0'){
 				if (doc[0]['orderedFood'] != ""){
-
 					order = foodAddArrange(doc[0]["orderedFood"], order);
 				}
 				tableinfo.update({table:table},{$set:{orderedFood:order}}).then(()=>{
