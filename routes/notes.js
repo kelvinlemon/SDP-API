@@ -1117,8 +1117,9 @@ function foodAddArrange(docs, order){
 	for (let i = 2; i < originFood.length; i+=2){
 		returnOrder = returnOrder + ' ' + originFood[i] + ' ' +originFood[i+1];
 	}
-	returnOrder = returnOrder + ' ' + newOrder;
-
+	if (newOrder != ''){
+		returnOrder = returnOrder + ' ' + newOrder;
+	}
 	return returnOrder;
 
 }
