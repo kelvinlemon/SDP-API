@@ -1147,15 +1147,12 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 		isValid = false;
 	}
 
-	for (var key in req.params) {
-		if (!req.params[key] || req.params[key].trim() === '') {
-			isValid2 = false;
-			break;
-		}
+	if (table && session && table.trim() !== '' && session.trim() !== '') {
+		// your code here
+	}else {
+		isValid2 =false;
 	}
-	if (Object.keys(req.params).length != 2){
-		isValid2 = false;
-	}
+	  
 	if (isValid2){
 		var tableValidCheck = await tableinfo.find({sessionCode:session});
 		
@@ -1184,7 +1181,7 @@ router.post('/submit/:table/:session', express.urlencoded({ extended: true }), a
 			res.json("session has expired! ");
 		}
 	}else{
-		res.json('session cannot be empty!')
+		res.json('session or table cannot be empty! bad request')
 	}
 });
 
