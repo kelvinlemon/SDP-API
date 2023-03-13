@@ -340,7 +340,7 @@ router.delete('/cancelfood/:table/', express.urlencoded({ extended: true }), asy
 			if (orderData[0] != "" ){
 				for (let i = 0; i < orderData.length; i+=2){
 					if (orderData[i] == foodId){
-						orderData[i+1] = parseInt(orderData[i+1]) - parseInt(quantity);
+						orderData[i+1] = ''+ (parseInt(orderData[i+1]) - parseInt(quantity));
 						if (orderData[i+1] == 0){
 							orderData.splice(i,2);
 						}
