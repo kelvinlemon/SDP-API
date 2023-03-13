@@ -1100,7 +1100,7 @@ function foodAddArrange(docs, order){
 		var add = false;
 		for(let j = 0; j < originFood.length; j+=2){
 			if (orderAdd[i] == originFood[j]){
-				originFood[j+1] = praseInt(originFood[j+1]) + praseInt(orderAdd[i+1])
+				originFood[j+1] = parseInt(originFood[j+1]) + parseInt(orderAdd[i+1])
 				add = true;
 			}
 		}
