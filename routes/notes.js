@@ -212,7 +212,7 @@ router.get('/enable/:table', (req, res) => {
 
 	var table = req.params.table;
 	if (req.cookies.managerId){
-		if (praseInt(table) >= 1 && praseInt(table) <= 10){
+		if (parseInt(table) >= 1 && parseInt(table) <= 10){
 			tableinfo.find({table:table}).then((docs)=>{
 				if (docs[0]["status"] != "1" && docs[0] != ""){
 					var random6Number = generateRandomNumberString();
