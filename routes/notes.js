@@ -212,21 +212,25 @@ router.get('/enable/:table', (req, res) => {
 
 	var table = req.params.table;
 	if (req.cookies.managerId){
-		tableinfo.find({table:table}).then((docs)=>{
-			if (docs[0]["status"] != "1" && docs[0] != ""){
-				var random6Number = generateRandomNumberString();
-				tableinfo.update({table:table},{$set:{orderedFood:"", time:formatTime(), status:"1", sessionCode: random6Number}}).then(()=>{
-					send.push({"URL":'/toorder/'+table+'/'+random6Number});
-					res.json(send);
-				}).catch((error)=>{
-					res.json(error);
-				})
-			}else{
-				res.json({"AlreadyEnabledWithURL":'/toorder/'+docs[0]['table']+'/'+docs[0]['sessionCode']});
-			}
-		}).catch((error)=>{
-			res.json(error);
-		})
+		if (praseInt(table) >= 1 && praseInt(table) <= 10){
+			tableinfo.find({table:table}).then((docs)=>{
+				if (docs[0]["status"] != "1" && docs[0] != ""){
+					var random6Number = generateRandomNumberString();
+					tableinfo.update({table:table},{$set:{orderedFood:"", time:formatTime(), status:"1", sessionCode: random6Number}}).then(()=>{
+						send.push({"URL":'/toorder/'+table+'/'+random6Number});
+						res.json(send);
+					}).catch((error)=>{
+						res.json(error);
+					})
+				}else{
+					res.json({"AlreadyEnabledWithURL":'/toorder/'+docs[0]['table']+'/'+docs[0]['sessionCode']});
+				}
+			}).catch((error)=>{
+				res.json(error);
+			})
+		}else{
+			res.json("No this table!");
+		}
 	}else{
 		res.json('Not logined!');
 	}
