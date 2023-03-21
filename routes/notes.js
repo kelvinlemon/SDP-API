@@ -621,7 +621,7 @@ router.get('/clogout', (req, res) => {
 
 
 /* Customer registration ------------------------------------------------------*/
-router.post('/register', (req, res) => {
+router.post('/register', express.urlencoded({ extended: true }), (req, res) => {
 	var dbo = req.db;
 	var List = dbo.get('userList');
 
@@ -964,7 +964,7 @@ router.get('/chartanalysis', async (req, res) => {
 });
 
 /* "Customer add history" action ------------------------------------------------------*/
-router.post('/addcustomerhistory', async (req, res) => {
+router.post('/addcustomerhistory', express.urlencoded({ extended: true }), async (req, res) => {
 	var dbo = req.db;
 	var userHistory = dbo.get('userHistoryList');
 	var menuList = dbo.get('menuList');
