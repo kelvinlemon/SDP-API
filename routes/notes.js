@@ -161,13 +161,8 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 			}
 			else{
 				if( pwd == docs[0]["password"]){
-					var cookieOptions = new CookieOptions
-					{
-						SameSite = SameSiteMode.None,
-						Secure = true, 
-						maxAge = 60 * 30000
-					};
-					res.cookie('managerId', docs[0]["_id"], cookieOptions);
+					var milliseconds = 60 * 30000;
+					res.cookie('managerId', docs[0]["_id"], { maxAge: milliseconds });
 					//req.session.userId = ''+docs[0]["_id"];
 					//req.session.name = docs[0]['name'];	
 					res.json("logined");
