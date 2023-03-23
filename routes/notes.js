@@ -141,14 +141,15 @@ function formatTime(){
 }
 
 /* Restaurant signin ------------------------------------------------------*/
-router.post('/rsignin', express.urlencoded({ extended: true }), (req, res) => {
+router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res) => {
 	var dbo = req.db;
 	var List = dbo.get('managerList');
 
 	var username = req.body.name;
 	var pwd = req.body.password;
+	var check = await List.find({_id:req.cookies.managerId});
 
-	if (req.cookies.managerId){			
+	if (check.length != 0){			
 		res.json("logined");
 	}else if(username=='' || pwd==''){
 		res.json("Username or password cannot be empty!");
@@ -161,9 +162,9 @@ router.post('/rsignin', express.urlencoded({ extended: true }), (req, res) => {
 				if( pwd == docs[0]["password"]){
 					var milliseconds = 60 * 30000;
 					res.cookie('managerId', docs[0]["_id"], { maxAge: milliseconds });
-					req.session.userId = ''+docs[0]["_id"];
-					req.session.name = docs[0]['name'];	
-					res.json("logined set");
+					//req.session.userId = ''+docs[0]["_id"];
+					//req.session.name = docs[0]['name'];	
+					res.json("logined");
 				}
 				else{
 					res.json("Login failure");
