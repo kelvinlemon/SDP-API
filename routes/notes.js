@@ -148,6 +148,7 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 	var username = req.body.name;
 	var pwd = req.body.password;
 	var check = await List.find({_id:req.cookies.managerId});
+	console.log(req.cookies.managerId);
 
 	if (check.length != 0){			
 		res.json("logined");
