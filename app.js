@@ -21,7 +21,7 @@ var app = express();
 };*/
 
 var corsOptions = {
-    origin: '*',
+    origin: 'http://219.78.60.145',
     credentials: true
 };
 
