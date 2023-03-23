@@ -6,7 +6,7 @@ var cors = require('cors');
 
 
 var monk = require('monk');
-var db = monk('mongodb+srv://db-test:MWphuRTxI6xuu1wJ@cluster0.4mvhq1n.mongodb.net/SDP-db?retryWrites=true&w=majority');
+var db = monk('mongodb+srv://db-test:MWphuRTxI6xuu1wJ@cluster0.4mvhq1n.mongodb.net/SDP-database?retryWrites=true&w=majority');
 
 var session = require('express-session');
 
