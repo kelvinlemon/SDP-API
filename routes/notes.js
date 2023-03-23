@@ -148,7 +148,6 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 	var username = req.body.name;
 	var pwd = req.body.password;
 	var check = await List.find({_id:req.cookies.managerId});
-	console.log(req.cookies.managerId);
 
 	if (check.length != 0){			
 		res.json("logined");
@@ -187,12 +186,13 @@ router.get('/rlogout', (req, res) => {
 });
 
 /* "enable table" page ------------------------------------------------------*/
-router.get('/enablepage', (req, res) => {
+router.get('/enablepage', async (req, res) => {
 	var db = req.db;
 	var tableinfo = db.get('tableList');
 	var send = [];
+	var check = await List.find({_id:req.cookies.managerId});
 
-	if (req.cookies.managerId){
+	if (check.length != 0){
 		tableinfo.find({}).then((docs)=>{
 			for (let i = 0; i < docs.length; i ++){
 				send.push({"table":docs[i]["table"], "status":docs[i]["status"]});
@@ -207,13 +207,16 @@ router.get('/enablepage', (req, res) => {
 });
 
 /* "enable" request ------------------------------------------------------*/
-router.get('/enable/:table', (req, res) => {
+router.get('/enable/:table', async (req, res) => {
+
 	var db = req.db;
 	var tableinfo = db.get('tableList');
 	var send = [];
 
 	var table = req.params.table;
-	if (req.cookies.managerId){
+	var check = await List.find({_id:req.cookies.managerId});
+
+	if (check.length != 0){
 		if (parseInt(table) >= 1 && parseInt(table) <= 10){
 			tableinfo.find({table:table}).then((docs)=>{
 				if (docs[0]["status"] != "1" && docs[0] != ""){
