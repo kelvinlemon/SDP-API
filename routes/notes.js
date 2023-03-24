@@ -416,6 +416,9 @@ function searchHistory(docs, day, month, year){
 	var filter2 = [];
 	var filter3 = [];
 	if (day != ""){
+		if (parseInt(day) < 10){
+			day = '0'+day;
+		}
 		for (let i =0; i < docs.length; i++){
 			if (day == docs[i]["time"].split(" ")[3]){
 				filter1.push(docs[i])
