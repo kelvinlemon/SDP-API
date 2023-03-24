@@ -179,7 +179,7 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 
 /* Restaurant logout ------------------------------------------------------*/
 router.get('/rlogout', (req, res) => {
-	res.header('Set-Cookie', 'managerId=""; SameSite=None; Secure; maxAge: 0');
+	res.clearCookie('managerId', {SameSite: 'None', Secure: true});
 	//req.session.userId = null;
 	//req.session.name = null;
 	res.json('Restaurant logouted');
