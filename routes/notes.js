@@ -227,9 +227,10 @@ router.get('/enable/:table', async (req, res) => {
 	var db = req.db;
 	var tableinfo = db.get('tableList');
 	var send = [];
-	var List = db.get('managerList');
+	
 
 	var table = req.params.table;
+	var List = db.get('managerList');
 	var check = await List.find({loginCookies:req.cookies.managerId});
 
 	if (check.length != 0){
@@ -289,14 +290,17 @@ router.get('/currentorderpage', async (req, res) => {
 });
 
 /* "disable" request ------------------------------------------------------*/
-router.delete('/disable/:table', express.urlencoded({ extended: true }), (req, res) => {
+router.delete('/disable/:table', express.urlencoded({ extended: true }), async (req, res) => {
 	var db = req.db;
 	var tableinfo = db.get('tableList');
 	var history = db.get('historyList');
 	var menu = db.get('menuList');
 
 	var table = req.params.table;
-	if (req.cookies.managerId){
+	var List = db.get('managerList');
+	var check = await List.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){
 		tableinfo.find({table:table}).then(async (docs)=>{
 			if (docs[0]["status"] != "0"){
 				var tableFood = docs[0]['orderedFood'].split(" ");
@@ -332,7 +336,10 @@ router.get('/clicktable/:table/', async (req, res) => {
     var send= [];
 
     var table = req.params.table;
-	if (req.cookies.managerId){
+	var List = db.get('managerList');
+	var check = await List.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){
     	var doc = await tableinfo.find({table:table});
 		if (doc[0]['status'] != '0'){
 			var orderData = doc[0]['orderedFood'].split(" ");
@@ -360,7 +367,10 @@ router.delete('/cancelfood/:table/', express.urlencoded({ extended: true }), asy
     var table = req.params.table;
 	var foodId = req.body.foodid;
 	var quantity = req.body.quantity;
-	if (req.cookies.managerId){
+	var List = db.get('managerList');
+	var check = await List.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){
     	var doc = await tableinfo.find({table:table});
 		if (doc[0]['status'] != '0'){
 			var orderData = doc[0]['orderedFood'].split(" ");
@@ -444,7 +454,7 @@ function searchHistory(docs, day, month, year){
 };
 
 /* "search" request ------------------------------------------------------*/
-router.post('/search', express.urlencoded({ extended: true }), (req, res) => {
+router.post('/search', express.urlencoded({ extended: true }), async (req, res) => {
 	var db = req.db;
 	var history = db.get('historyList');
 
@@ -452,7 +462,10 @@ router.post('/search', express.urlencoded({ extended: true }), (req, res) => {
 	var month = req.body.month;
 	var year = req.body.year;
 
-	if (req.cookies.managerId){
+	var List = db.get('managerList');
+	var check = await List.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){
 		history.find({}).then(async (docs)=>{
 			if (day == "" && month =="" && year == ""){
 				res.json(docs)
@@ -480,7 +493,10 @@ router.get('/clickhistorytable/:historyid/', async (req, res) => {
     var send= [];
 
     var id = req.params.historyid;
-	if (req.cookies.managerId){
+	var List = db.get('managerList');
+	var check = await List.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){
     	var doc = await history.find({_id:id});
 		if (!doc || doc.length == 0){
 			res.json("history not found");
@@ -506,7 +522,10 @@ router.delete('/deletehistory/:historyid', async (req, res) => {
     var history = db.get('historyList');
 
     var id = req.params.historyid;
-	if (req.cookies.managerId){
+	var List = db.get('managerList');
+	var check = await List.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){
 		history.remove({_id:id}).then(()=>{
 			res.json("history deleted");
 		}).catch ((err)=>{
@@ -518,7 +537,7 @@ router.delete('/deletehistory/:historyid', async (req, res) => {
 });
 
 /* "Add food" action ------------------------------------------------------*/
-router.post('/addfood', express.urlencoded({ extended: true }), (req, res) => {
+router.post('/addfood', express.urlencoded({ extended: true }), async (req, res) => {
 	var dbo = req.db;
 	var menu = dbo.get('menuList');
 
@@ -532,7 +551,10 @@ router.post('/addfood', express.urlencoded({ extended: true }), (req, res) => {
 	var set = req.body.set;
 	var drink = req.body.drink;
 
-	if (req.cookies.managerId){	
+	var List = dbo.get('managerList');
+	var check = await List.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){
 		var isValid = true;
 		for (var key in req.body) {
 			if (!req.body[key] || req.body[key].trim() === '') {
@@ -564,7 +586,10 @@ router.get('/deletepage', async (req, res) => {
     var menu = db.get('menuList');
     var send= [];
 
-	if (req.cookies.managerId){
+	var List = db.get('managerList');
+	var check = await List.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){
 		send = await menu.find({});
 		res.json(send);
 	}else{
@@ -578,7 +603,10 @@ router.delete('/deletefood/:foodid', async (req, res) => {
     var menuList = db.get('menuList');
 
     var id = req.params.foodid;
-	if (req.cookies.managerId){
+	var List = db.get('managerList');
+	var check = await List.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){
 		menuList.remove({_id:id}).then(()=>{
 			res.json("food deleted");
 		}).catch ((err)=>{
