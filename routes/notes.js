@@ -312,7 +312,7 @@ router.delete('/disable/:table', express.urlencoded({ extended: true }), async (
 					}
 				}
 				if (docs[0]["orderedFood"] != "" && docs[0]['orderedFood'] != "undefined"){
-					history.insert({"table":docs[0]["table"], "orderedFood":docs[0]["orderedFood"], "time":docs[0]["time"], "price":price})
+					history.insert({"table":docs[0]["table"], "orderedFood":docs[0]["orderedFood"], "time":docs[0]["time"], "totalPrice":''+price})
 				}
 				tableinfo.update({table:table},{$set:{orderedFood:"", time:"", status:"0", sessionCode:""}}).then(()=>{
 					res.json('Disabled');
