@@ -140,6 +140,15 @@ function formatTime(){
 
 }
 
+function generateRandom16String() {
+	let result = '';
+	const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	for (let i = 0; i < 16; i++) {
+	  result += characters.charAt(Math.floor(Math.random() * characters.length));
+	}
+	return result;
+  }
+
 /* Restaurant signin ------------------------------------------------------*/
 router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res) => {
 	var dbo = req.db;
@@ -147,7 +156,7 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 
 	var username = req.body.name;
 	var pwd = req.body.password;
-	var check = await List.find({_id:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.managerId});
 
 	if (check.length != 0){			
 		res.json("logined");
@@ -161,7 +170,9 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 			else{
 				if( pwd == docs[0]["password"]){
 					var milliseconds = 60 * 30000;
-					res.header('Set-Cookie', 'managerId='+docs[0]["_id"] +'; SameSite=None; Secure; maxAge: '+milliseconds);
+					var loginSession = generateRandom16String();
+					List.update({_id:docs[0]["_id"]},{$set:{loginCookies:loginSession}})
+					res.header('Set-Cookie', 'managerId='+loginSession +'; SameSite=None; Secure; maxAge: '+milliseconds);
 					//req.session.userId = ''+docs[0]["_id"];
 					//req.session.name = docs[0]['name'];	
 					res.json("logined");
@@ -178,7 +189,10 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 })
 
 /* Restaurant logout ------------------------------------------------------*/
-router.get('/rlogout', (req, res) => {
+router.get('/rlogout', async (req, res) => {
+	var dbo = req.db;
+	var List = dbo.get('managerList');
+	await List.update({loginCookies:req.cookies.managerId},{$set:{loginCookies:''}})
 	res.clearCookie('managerId', {SameSite: 'None', Secure: true});
 	//req.session.userId = null;
 	//req.session.name = null;
