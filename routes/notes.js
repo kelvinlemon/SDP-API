@@ -258,13 +258,15 @@ router.get('/enable/:table', async (req, res) => {
 });
 
 /* "current order" page ------------------------------------------------------*/
-router.get('/currentorderpage', (req, res) => {
+router.get('/currentorderpage', async (req, res) => {
 	var db = req.db;
 	var tableinfo = db.get('tableList');
 	var menu = db.get('menuList');
+	var List = db.get('managerList');
 	var send = [];
+	var check = await List.find({loginCookies:req.cookies.managerId});
 
-	if (req.cookies.managerId){
+	if (check.length != 0){
 		tableinfo.find({status:"1"}).then(async (docs)=>{		
 			for (let i = 0; i < docs.length; i ++){
 				var tableFood = docs[i]['orderedFood'].split(" ");
