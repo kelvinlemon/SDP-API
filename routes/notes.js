@@ -203,8 +203,9 @@ router.get('/rlogout', async (req, res) => {
 router.get('/enablepage', async (req, res) => {
 	var db = req.db;
 	var tableinfo = db.get('tableList');
+	var List = db.get('managerList');
 	var send = [];
-	var check = await List.find({_id:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.managerId});
 
 	if (check.length != 0){
 		tableinfo.find({}).then((docs)=>{
@@ -226,9 +227,10 @@ router.get('/enable/:table', async (req, res) => {
 	var db = req.db;
 	var tableinfo = db.get('tableList');
 	var send = [];
+	var List = db.get('managerList');
 
 	var table = req.params.table;
-	var check = await List.find({_id:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.managerId});
 
 	if (check.length != 0){
 		if (parseInt(table) >= 1 && parseInt(table) <= 10){
