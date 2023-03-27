@@ -1065,7 +1065,7 @@ router.post('/addcustomerhistory', express.urlencoded({ extended: true }), async
 
 
 /* "Customer delete history" action ------------------------------------------------------*/
-router.delete('/deletecustomerhistory/:historyid', async (req, res) => {
+router.delete('/deletecustomerhistory/:historyid', express.urlencoded({ extended: true }), async (req, res) => {
     var db = req.db;
     var history = db.get('userHistoryList');
 
@@ -1094,7 +1094,7 @@ router.delete('/deletecustomerhistory/:historyid', async (req, res) => {
 }*/
 
 /* "To order" page data ------------------------------------------------------*/
-router.post('/toorder', async (req, res) => {
+router.post('/toorder', express.urlencoded({ extended: true }), async (req, res) => {
     var db = req.db;
     var menu = db.get('menuList');
 	var tableinfo = db.get('tableList');
