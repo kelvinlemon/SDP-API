@@ -1094,14 +1094,14 @@ router.delete('/deletecustomerhistory/:historyid', async (req, res) => {
 }*/
 
 /* "To order" page data ------------------------------------------------------*/
-router.get('/toorder/:table/:session', async (req, res) => {
+router.post('/toorder', async (req, res) => {
     var db = req.db;
     var menu = db.get('menuList');
 	var tableinfo = db.get('tableList');
     var send= [];
 
-    var table = req.params.table;
-	var session = req.params.session;
+    var table = req.body.table;
+	var session = req.body.session;
 	
     var doc = await tableinfo.find({table:table});
 	if (doc[0]['status'] != '0'){
