@@ -1107,8 +1107,7 @@ router.get('/toorder/:table/:session', async (req, res) => {
 	if (doc[0]['status'] != '0'){
 		send = await menu.find({});
 		var milliseconds = 30800000;
-		res.header('Set-Cookie', 'session='+session +'; SameSite=None; Secure; maxAge: '+milliseconds);
-		res.header('Set-Cookie', 'table='+table +'; SameSite=None; Secure; maxAge: '+milliseconds);
+		res.header('Set-Cookie', 'session='+session +';table='+table +'; SameSite=None; Secure; maxAge: '+milliseconds);
 		res.json(send);
 	}else{
 		res.json("Table "+ table +" is disabled!");
