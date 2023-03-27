@@ -350,7 +350,11 @@ router.get('/clicktable/:table/', async (req, res) => {
 				}
 				send.push({"id":docs2[0]['_id'],"foodName":docs2[0]['foodName'], "description":docs2[0]['description'],"Price":docs2[0]['price'], "quantity":orderData[i+1]});
 			}
-			res.json(send);
+			if (send.length != 0){
+				res.json(send);
+			}else{
+				res.json('No food ordered yet!');
+			}
 		}else{
 			res.json("Table "+ table +" is disabled!");
 		}
