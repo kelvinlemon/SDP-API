@@ -172,7 +172,7 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 					var milliseconds = 60 * 30000;
 					var loginSession = generateRandom16String();
 					List.update({_id:docs[0]["_id"]},{$set:{loginCookies:loginSession}})
-					res.header('Set-Cookie', 'managerId='+loginSession +'; SameSite=Strict; Secure; maxAge: '+milliseconds);
+					res.header('Set-Cookie', 'managerId='+loginSession +'; SameSite=None; Secure; maxAge: '+milliseconds);
 					//req.session.userId = ''+docs[0]["_id"];
 					//req.session.name = docs[0]['name'];	
 					res.json("logined");
@@ -1108,8 +1108,8 @@ router.post('/toorder', async (req, res) => {
 		send = await menu.find({});
 		var milliseconds = 28800000; //8hours
 		res.setHeader('Set-Cookie', [
-			'session=' + session + '; SameSite=Strict; Secure; maxAge: ' + milliseconds,
-			'table=' + table + '; SameSite=Strict; Secure; maxAge: ' + milliseconds
+			'session=' + session + '; SameSite=Strict; None; maxAge: ' + milliseconds,
+			'table=' + table + '; SameSite=Strict; None; maxAge: ' + milliseconds
 		  ]);
 		res.json(send);
 	}else{
