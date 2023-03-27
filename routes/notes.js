@@ -1099,9 +1099,13 @@ router.post('/toorder', express.urlencoded({ extended: true }), async (req, res)
     var menu = db.get('menuList');
 	var tableinfo = db.get('tableList');
     var send= [];
-
-    var table = req.body.table;
-	var session = req.body.session;
+	if (req.body.length == 2){
+    	var table = req.body.table;
+		var session = req.body.session;
+	}else{
+		var table = req.cookies.table;
+		var session = req.cookies.session;
+	}
 	
     var doc = await tableinfo.find({table:table});
 	if (doc[0]['status'] != '0'){
