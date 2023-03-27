@@ -1108,8 +1108,8 @@ router.post('/toorder', async (req, res) => {
 		send = await menu.find({});
 		var milliseconds = 28800000; //8hours
 		res.setHeader('Set-Cookie', [
-			'session=' + session + '; SameSite=Strict; None; maxAge: ' + milliseconds,
-			'table=' + table + '; SameSite=Strict; None; maxAge: ' + milliseconds
+			'session=' + session + '; SameSite=None; Secure; maxAge: ' + milliseconds,
+			'table=' + table + '; SameSite=None; Secure; maxAge: ' + milliseconds
 		  ]);
 		res.json(send);
 	}else{
