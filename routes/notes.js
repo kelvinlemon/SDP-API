@@ -172,7 +172,7 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 					var milliseconds = 60 * 30000;
 					var loginSession = generateRandom16String();
 					List.update({_id:docs[0]["_id"]},{$set:{loginCookies:loginSession}})
-					res.header('Set-Cookie', 'managerId='+loginSession +'; SameSite=None; Secure; maxAge: '+milliseconds);
+					res.header('Set-Cookie', 'managerId='+loginSession +'; SameSite=Strict; Secure; maxAge: '+milliseconds);
 					//req.session.userId = ''+docs[0]["_id"];
 					//req.session.name = docs[0]['name'];	
 					res.json("logined");
@@ -1107,7 +1107,7 @@ router.get('/toorder/:table/:session', async (req, res) => {
 	if (doc[0]['status'] != '0'){
 		send = await menu.find({});
 		var milliseconds = 30800000;
-		res.header('Set-Cookie', 'session='+session +';table='+table +'; SameSite=None; Secure; maxAge: '+milliseconds);
+		res.header('Set-Cookie', 'session='+session +';table='+table +'; SameSite=Strict; Secure; maxAge: '+milliseconds);
 		res.json(send);
 	}else{
 		res.json("Table "+ table +" is disabled!");
