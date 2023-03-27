@@ -1106,7 +1106,7 @@ router.get('/toorder/:table/:session', async (req, res) => {
     var doc = await tableinfo.find({table:table});
 	if (doc[0]['status'] != '0'){
 		send = await menu.find({});
-		var milliseconds = 30800000;
+		var milliseconds = 28800000; //8hours
 		res.setHeader('Set-Cookie', [
 			'session=' + session + '; SameSite=Strict; Secure; maxAge: ' + milliseconds,
 			'table=' + table + '; SameSite=Strict; Secure; maxAge: ' + milliseconds
@@ -1119,17 +1119,14 @@ router.get('/toorder/:table/:session', async (req, res) => {
 
 
 /* "Ordered" page data ------------------------------------------------------*/
-router.post('/ordered/:table/:session', async (req, res) => {
+router.get('/ordered', async (req, res) => {
     var db = req.db;
     var menuList = db.get('menuList');
 	var tableinfo = db.get('tableList');
     var send= [];
 
-    var table = req.params.table;
-
-	var session = req.params.session;
-	var milliseconds = 10800000;
-	res.cookie('session', session, { maxAge: milliseconds });
+    var table = req.cookies.table;
+	var session = req.cookies.session;
 	
     var doc = await tableinfo.find({table:table});
 	if (doc[0]['status'] != '0' && doc[0]['sessionCode'] == session){
@@ -1194,16 +1191,14 @@ function foodAddArrange(docs, order){
 }
 
 /* "Submit" request ------------------------------------------------------*/
-router.post('/submit/:table/:session', express.urlencoded({ extended: true }), async (req, res) => {
+router.post('/submit', express.urlencoded({ extended: true }), async (req, res) => {
     var db = req.db;
 	var tableinfo = db.get('tableList');
 
-    var table = req.params.table;
-	var session = req.params.session;
+    var table = req.cookies.table;
+	var session = req.cookies.session;
 
 	var order = req.body.order; // order data should be arrage like, data: {"order": "_id 1 _id 2"}
-	var milliseconds = 10800000;
-	res.cookie('session', session, { maxAge: milliseconds });
 	
 	var isValid = true;
 	for (var key in req.body) {
