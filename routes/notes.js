@@ -1,9 +1,8 @@
 const { json } = require('express');
 var express = require('express');
 var router = express.Router();
-import {config} from "dotenv";
-import {Configuration, OpenAIApi} from "openai";
-config()
+require("dotenv").config();
+const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
 	apiKey: process.env.OPEN_AI_KEY,
