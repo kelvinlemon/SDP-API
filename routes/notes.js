@@ -193,7 +193,7 @@ router.get('/rlogout', async (req, res) => {
 	var dbo = req.db;
 	var List = dbo.get('managerList');
 	await List.update({loginCookies:req.cookies.loginSession},{$set:{loginCookies:''}})
-	res.header('Set-Cookie', 'loginSession=; SameSite=None; Secure;');
+	res.header('Set-Cookie', 'loginSession=""; SameSite=None; Secure;');
 	//req.session.userId = null;
 	//req.session.name = null;
 	res.json('Restaurant logouted');
@@ -683,8 +683,8 @@ router.get('/clogout', async (req, res) => {
 	var List = dbo.get('managerList');
 	await List.update({loginCookies:req.cookies.userId},{$set:{loginCookies:''}})
 	res.setHeader('Set-Cookie', [
-		'loginSession=' + loginSession + '; SameSite=None; Secure;',
-		'userId=' + docs[0]["_id"] + '; SameSite=None; Secure;'
+		'loginSession=""; SameSite=None; Secure;',
+		'userId=""; SameSite=None; Secure;'
 	  ]);
 	res.json('User logouted');
 });
