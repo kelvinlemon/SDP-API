@@ -958,7 +958,7 @@ router.post('/customizerecommend', express.urlencoded({ extended: true }), async
 		}
 		if (filter.length!=0 && filter.length != tempLength){
 			res.json(filter); 
-		}else if (filter.length != tempLength){
+		}else if (filter.length == tempLength){
 			res.json("Not filter applied!");
 		}else{
 			res.json("No food matched with filter!");
