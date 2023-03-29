@@ -1,6 +1,11 @@
 const { json } = require('express');
-var express = require('express')
-var router = express.Router()
+var express = require('express');
+var router = express.Router();
+import {config} from "dotenv";
+import {Configuration, OpenAIApi} from "openai";
+config()
+
+const openai = new OpenAIApi(Configuration);
 
 function formatTime(){
 	let time = new Date();
