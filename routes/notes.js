@@ -657,7 +657,6 @@ router.post('/csignin', express.urlencoded({ extended: true }), async (req, res)
 					var milliseconds = 60 * 30000;
 					var loginSession = generateRandom16String();
 					List.update({_id:docs[0]["_id"]},{$set:{loginCookies:loginSession}})
-					res.header('Set-Cookie', 'loginSession='+loginSession +'; SameSite=None; Secure; maxAge: '+milliseconds);
 					res.setHeader('Set-Cookie', [
 						'loginSession=' + loginSession + '; SameSite=None; Secure; maxAge: ' + milliseconds,
 						'userId=' + docs[0]["_id"] + '; SameSite=None; Secure; maxAge: ' + milliseconds
