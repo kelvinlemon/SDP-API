@@ -193,7 +193,7 @@ router.get('/rlogout', async (req, res) => {
 	var dbo = req.db;
 	var List = dbo.get('managerList');
 	await List.update({loginCookies:req.cookies.managerId},{$set:{loginCookies:''}})
-	res.clearCookie('managerId', {SameSite: 'None', Secure: true});
+	res.header('Set-Cookie', 'managerId=; SameSite=None; Secure; maxAge: '+milliseconds);
 	//req.session.userId = null;
 	//req.session.name = null;
 	res.json('Restaurant logouted');
@@ -634,14 +634,16 @@ function generateRandomNumberString() {
 }
 
 /* Customer signin ------------------------------------------------------*/
-router.post('/csignin', express.urlencoded({ extended: true }), (req, res) => {
+router.post('/csignin', express.urlencoded({ extended: true }), async (req, res) => {
 	var dbo = req.db;
 	var List = dbo.get('userList');
 
 	var username = req.body.name;
 	var pwd = req.body.password;
 
-	if (req.cookies.userId){			
+	var check = await List.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){		
 		res.json("logined");
 	}else if(username=='' || pwd==''){
 		res.json("Username or password cannot be empty!");
@@ -653,7 +655,9 @@ router.post('/csignin', express.urlencoded({ extended: true }), (req, res) => {
 			else{
 				if( pwd == docs[0]["password"]){
 					var milliseconds = 60 * 30000;
-					res.cookie('userId', docs[0]["_id"], { maxAge: milliseconds });
+					var loginSession = generateRandom16String();
+					List.update({_id:docs[0]["_id"]},{$set:{loginCookies:loginSession}})
+					res.header('Set-Cookie', 'managerId='+loginSession +'; SameSite=None; Secure; maxAge: '+milliseconds);
 					//req.session.userId = ''+docs[0]["_id"];
 					//req.session.name = docs[0]['userName'];		
 					res.json("logined");
@@ -670,16 +674,17 @@ router.post('/csignin', express.urlencoded({ extended: true }), (req, res) => {
 })
 
 /* Customer logout ------------------------------------------------------*/
-router.get('/clogout', (req, res) => {
-	res.clearCookie('userId');
-	req.session.userId = null;
-	req.session.name = null;
+router.get('/clogout', async (req, res) => {
+	var dbo = req.db;
+	var List = dbo.get('managerList');
+	await List.update({loginCookies:req.cookies.managerId},{$set:{loginCookies:''}})
+	res.header('Set-Cookie', 'managerId=; SameSite=None; Secure; maxAge: '+milliseconds);
 	res.json('User logouted');
 });
 
 
 /* Customer registration ------------------------------------------------------*/
-router.post('/register', express.urlencoded({ extended: true }), (req, res) => {
+router.post('/register', express.urlencoded({ extended: true }), async (req, res) => {
 	var dbo = req.db;
 	var List = dbo.get('userList');
 
@@ -688,7 +693,9 @@ router.post('/register', express.urlencoded({ extended: true }), (req, res) => {
 	var role = req.body.role;
 
 
-	if (req.cookies.userId){
+	var check = await List.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){		
 		res.json("Already logined");
 	}else if (username == "" || pwd == "" || role == ""){
 		res.json("Username, password or role cannot be empty!");
@@ -721,7 +728,9 @@ router.get('/chistory',async (req, res) => {
 	var send = [];
 	var userList = dbo.get('userList');
 
-	if (req.cookies.userId){
+	var check = await userList.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){		
 		var userName = await userList.find({_id:req.cookies.userId});
 		userHistory.find({userName:userName[0]['userName']}).then(async (docs)=>{
 			for (let i = 0;i < docs.length; i++){
@@ -878,8 +887,10 @@ router.get('/healthrecommend', async (req, res) => {
 	var menuList = dbo.get('menuList');
 	var userList = dbo.get('userList');
 	var data = [];
-	
-	if (req.cookies.userId){
+
+	var check = await userList.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){	
 		var userName = await userList.find({_id:req.cookies.userId});
 		userHistory.find({userName:userName[0]['userName']}).then(async (docs)=>{
 			for (let i = 0;i < docs.length; i++){
@@ -922,7 +933,11 @@ router.post('/customizerecommend', express.urlencoded({ extended: true }), async
 	var dbo = req.db;
 	var menu = dbo.get('menuList');
 
-	if (req.cookies.userId){	
+	var userList = dbo.get('userList');
+
+	var check = await userList.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){		
 		var filter = await menu.find({});
 		for (var key in req.body) {
 			if (key != 'price' && req.body[key]){
@@ -950,7 +965,11 @@ router.get('/randomrecommendfood', async (req, res) => {
 	var dbo = req.db;
 	var menuList = dbo.get('menuList');
 	
-	if (req.cookies.userId){
+	var userList = dbo.get('userList');
+
+	var check = await userList.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){	
 		var menu = await menuList.find({});
 		var food = true;
 		var recommend = [];
@@ -971,7 +990,11 @@ router.get('/randomrecommenddrink', async (req, res) => {
 	var dbo = req.db;
 	var menuList = dbo.get('menuList');
 	
-	if (req.cookies.userId){
+	var userList = dbo.get('userList');
+
+	var check = await userList.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){	
 		var menu = await menuList.find({});
 		var food = true;
 		var recommend = [];
@@ -996,7 +1019,10 @@ router.get('/chartanalysis', async (req, res) => {
 	var userList = dbo.get('userList');
 	var data = [];
 	
-	if (req.cookies.userId){
+
+	var check = await userList.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){	
 		var userName = await userList.find({_id:req.cookies.userId});
 		userHistory.find({userName:userName[0]['userName']}).then(async (docs)=>{
 			for (let i = 0;i < docs.length; i++){
@@ -1030,21 +1056,22 @@ router.post('/addcustomerhistory', express.urlencoded({ extended: true }), async
 
 	var foodId = req.body.foodid;
 	var isValid = true;
-	for (var key in req.body) {
-		if (!req.body[key] || req.body[key].trim() === '') {
-			isValid = false;
-			break;
-		}
-	}
-	if (Object.keys(req.body).length != 1){
-		isValid = false;
-	}
+	var check = await userList.find({loginCookies:req.cookies.managerId});
 
-	if (foodId.length != 24){
-		isValid = false;
-	}
-	
-	if (req.cookies.userId){
+	if (check.length != 0){	
+		for (var key in req.body) {
+			if (!req.body[key] || req.body[key].trim() === '') {
+				isValid = false;
+				break;
+			}
+		}
+		if (Object.keys(req.body).length != 1){
+			isValid = false;
+		}
+
+		if (foodId.length != 24){
+			isValid = false;
+		}
 		if (isValid){
 			var foodFind = await menuList.find({_id:foodId});
 			if (foodFind.length != 0){
@@ -1070,7 +1097,10 @@ router.delete('/deletecustomerhistory/:historyid', express.urlencoded({ extended
     var history = db.get('userHistoryList');
 
     var id = req.params.historyid;
-	if (req.cookies.userId){
+	var userList = db.get('userList');
+	var check = await userList.find({loginCookies:req.cookies.managerId});
+
+	if (check.length != 0){	
 		history.remove({_id:id}).then(()=>{
 			res.json("history deleted");
 		}).catch ((err)=>{
