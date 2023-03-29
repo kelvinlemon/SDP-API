@@ -1120,6 +1120,29 @@ router.delete('/deletecustomerhistory/:historyid', express.urlencoded({ extended
 	}
 });
 
+/* "Open AI health suggestion" action ------------------------------------------------------*/
+app.post("/askhealthquestion", express.urlencoded({ extended: true }), async (req, res) => {
+	try {
+	  var question=req.body.question;
+	  const response = await openai.createChatCompletion({
+		  model: "gpt-3.5-turbo",
+		  messages: [{ "role": "user", "content": question }],
+		})
+  
+	  return res.status(200).json({
+		success: true,
+		data: response.data.choices[0].message.content,
+	  });
+	} catch (error) {
+	  return res.status(400).json({
+		success: false,
+		error: error.response
+		  ? error.response.data
+		  : "There was an issue on the server",
+	  });
+	}
+  });
+
 /*function getUniqueTypes(data) {
 	const types = new Set();
 	const uniqueTypes = [];
