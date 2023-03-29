@@ -4,7 +4,6 @@ var path = require('path');
 var logger = require('morgan');
 var cors = require('cors');
 
-
 var monk = require('monk');
 var db = monk('mongodb+srv://db-test:MWphuRTxI6xuu1wJ@cluster0.4mvhq1n.mongodb.net/SDP-database?retryWrites=true&w=majority');
 

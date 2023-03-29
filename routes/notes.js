@@ -1,7 +1,7 @@
 const { json } = require('express');
 var express = require('express');
 var router = express.Router();
-import {config} from "dotenv";
+/*import {config} from "dotenv";
 import {Configuration, OpenAIApi} from "openai";
 config()
 
@@ -9,7 +9,7 @@ const configuration = new Configuration({
 	apiKey: process.env.OPEN_AI_KEY,
   });
 
-const openai = new OpenAIApi(configuration);
+const openai = new OpenAIApi(configuration);*/
 
 
 function formatTime(){
@@ -1131,7 +1131,7 @@ router.delete('/deletecustomerhistory/:historyid', express.urlencoded({ extended
 });
 
 /* "Open AI health suggestion" action ------------------------------------------------------*/
-app.post("/askhealthquestion", express.urlencoded({ extended: true }), async (req, res) => {
+/*app.post("/askhealthquestion", express.urlencoded({ extended: true }), async (req, res) => {
 	try {
 	  var question=req.body.question;
 	  const response = await openai.createChatCompletion({
@@ -1151,7 +1151,7 @@ app.post("/askhealthquestion", express.urlencoded({ extended: true }), async (re
 		  : "There was an issue on the server",
 	  });
 	}
-  });
+  });*/
 
 /*function getUniqueTypes(data) {
 	const types = new Set();
