@@ -945,6 +945,7 @@ router.post('/customizerecommend', express.urlencoded({ extended: true }), async
 
 	if (check.length != 0 && check[0]['loginCookies'] != '0'){		
 		var filter = await menu.find({});
+		var tempLength = filter.length;
 		for (var key in req.body) {
 			if (key != 'price' && req.body[key]){
 				filter = filterByKey(filter, key, req.body[key])
@@ -955,8 +956,10 @@ router.post('/customizerecommend', express.urlencoded({ extended: true }), async
 				filter.splice(i ,1);
 			}
 		}
-		if (filter.length!=0){
+		if (filter.length!=0 && filter.length != tempLength){
 			res.json(filter); 
+		}else if (filter.length != tempLength){
+			res.json("Not filter applied!");
 		}else{
 			res.json("No food matched with filter!");
 		}
