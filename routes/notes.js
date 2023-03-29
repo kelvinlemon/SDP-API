@@ -5,7 +5,12 @@ import {config} from "dotenv";
 import {Configuration, OpenAIApi} from "openai";
 config()
 
-const openai = new OpenAIApi(Configuration);
+const configuration = new Configuration({
+	apiKey: process.env.OPEN_AI_KEY,
+  });
+
+const openai = new OpenAIApi(configuration);
+
 
 function formatTime(){
 	let time = new Date();
