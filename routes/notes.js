@@ -156,7 +156,7 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 
 	var username = req.body.name;
 	var pwd = req.body.password;
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){			
 		res.json("logined");
@@ -172,7 +172,7 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 					var milliseconds = 60 * 30000;
 					var loginSession = generateRandom16String();
 					List.update({_id:docs[0]["_id"]},{$set:{loginCookies:loginSession}})
-					res.header('Set-Cookie', 'managerId='+loginSession +'; SameSite=None; Secure; maxAge: '+milliseconds);
+					res.header('Set-Cookie', 'loginSession='+loginSession +'; SameSite=None; Secure; maxAge: '+milliseconds);
 					//req.session.userId = ''+docs[0]["_id"];
 					//req.session.name = docs[0]['name'];	
 					res.json("logined");
@@ -192,8 +192,8 @@ router.post('/rsignin', express.urlencoded({ extended: true }), async (req, res)
 router.get('/rlogout', async (req, res) => {
 	var dbo = req.db;
 	var List = dbo.get('managerList');
-	await List.update({loginCookies:req.cookies.managerId},{$set:{loginCookies:''}})
-	res.header('Set-Cookie', 'managerId=; SameSite=None; Secure; maxAge: '+milliseconds);
+	await List.update({loginCookies:req.cookies.loginSession},{$set:{loginCookies:''}})
+	res.header('Set-Cookie', 'loginSession=; SameSite=None; Secure;');
 	//req.session.userId = null;
 	//req.session.name = null;
 	res.json('Restaurant logouted');
@@ -205,7 +205,7 @@ router.get('/enablepage', async (req, res) => {
 	var tableinfo = db.get('tableList');
 	var List = db.get('managerList');
 	var send = [];
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
 		tableinfo.find({}).then((docs)=>{
@@ -231,7 +231,7 @@ router.get('/enable/:table', async (req, res) => {
 
 	var table = req.params.table;
 	var List = db.get('managerList');
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
 		if (parseInt(table) >= 1 && parseInt(table) <= 10){
@@ -265,7 +265,7 @@ router.get('/currentorderpage', async (req, res) => {
 	var menu = db.get('menuList');
 	var List = db.get('managerList');
 	var send = [];
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
 		tableinfo.find({status:"1"}).then(async (docs)=>{		
@@ -298,7 +298,7 @@ router.delete('/disable/:table', express.urlencoded({ extended: true }), async (
 
 	var table = req.params.table;
 	var List = db.get('managerList');
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
 		tableinfo.find({table:table}).then(async (docs)=>{
@@ -337,7 +337,7 @@ router.get('/clicktable/:table/', async (req, res) => {
 
     var table = req.params.table;
 	var List = db.get('managerList');
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
     	var doc = await tableinfo.find({table:table});
@@ -372,7 +372,7 @@ router.delete('/cancelfood/:table/', express.urlencoded({ extended: true }), asy
 	var foodId = req.body.foodid;
 	var quantity = req.body.quantity;
 	var List = db.get('managerList');
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
     	var doc = await tableinfo.find({table:table});
@@ -470,7 +470,7 @@ router.post('/search', express.urlencoded({ extended: true }), async (req, res) 
 	var year = req.body.year;
 
 	var List = db.get('managerList');
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
 		history.find({}).then(async (docs)=>{
@@ -501,7 +501,7 @@ router.get('/clickhistorytable/:historyid/', async (req, res) => {
 
     var id = req.params.historyid;
 	var List = db.get('managerList');
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
     	var doc = await history.find({_id:id});
@@ -530,7 +530,7 @@ router.delete('/deletehistory/:historyid', async (req, res) => {
 
     var id = req.params.historyid;
 	var List = db.get('managerList');
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
 		history.remove({_id:id}).then(()=>{
@@ -559,7 +559,7 @@ router.post('/addfood', express.urlencoded({ extended: true }), async (req, res)
 	var drink = req.body.drink;
 
 	var List = dbo.get('managerList');
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
 		var isValid = true;
@@ -594,7 +594,7 @@ router.get('/deletepage', async (req, res) => {
     var send= [];
 
 	var List = db.get('managerList');
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
 		send = await menu.find({});
@@ -611,7 +611,7 @@ router.delete('/deletefood/:foodid', async (req, res) => {
 
     var id = req.params.foodid;
 	var List = db.get('managerList');
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){
 		menuList.remove({_id:id}).then(()=>{
@@ -641,7 +641,7 @@ router.post('/csignin', express.urlencoded({ extended: true }), async (req, res)
 	var username = req.body.name;
 	var pwd = req.body.password;
 
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){		
 		res.json("logined");
@@ -657,7 +657,11 @@ router.post('/csignin', express.urlencoded({ extended: true }), async (req, res)
 					var milliseconds = 60 * 30000;
 					var loginSession = generateRandom16String();
 					List.update({_id:docs[0]["_id"]},{$set:{loginCookies:loginSession}})
-					res.header('Set-Cookie', 'managerId='+loginSession +'; SameSite=None; Secure; maxAge: '+milliseconds);
+					res.header('Set-Cookie', 'loginSession='+loginSession +'; SameSite=None; Secure; maxAge: '+milliseconds);
+					res.setHeader('Set-Cookie', [
+						'loginSession=' + loginSession + '; SameSite=None; Secure; maxAge: ' + milliseconds,
+						'userId=' + docs[0]["_id"] + '; SameSite=None; Secure; maxAge: ' + milliseconds
+					  ]);
 					//req.session.userId = ''+docs[0]["_id"];
 					//req.session.name = docs[0]['userName'];		
 					res.json("logined");
@@ -677,8 +681,11 @@ router.post('/csignin', express.urlencoded({ extended: true }), async (req, res)
 router.get('/clogout', async (req, res) => {
 	var dbo = req.db;
 	var List = dbo.get('managerList');
-	await List.update({loginCookies:req.cookies.managerId},{$set:{loginCookies:''}})
-	res.header('Set-Cookie', 'managerId=; SameSite=None; Secure; maxAge: '+milliseconds);
+	await List.update({loginCookies:req.cookies.userId},{$set:{loginCookies:''}})
+	res.setHeader('Set-Cookie', [
+		'loginSession=' + loginSession + '; SameSite=None; Secure;',
+		'userId=' + docs[0]["_id"] + '; SameSite=None; Secure;'
+	  ]);
 	res.json('User logouted');
 });
 
@@ -693,7 +700,7 @@ router.post('/register', express.urlencoded({ extended: true }), async (req, res
 	var role = req.body.role;
 
 
-	var check = await List.find({loginCookies:req.cookies.managerId});
+	var check = await List.find({loginCookies:req.cookies.userId});
 
 	if (check.length != 0){		
 		res.json("Already logined");
@@ -728,7 +735,7 @@ router.get('/chistory',async (req, res) => {
 	var send = [];
 	var userList = dbo.get('userList');
 
-	var check = await userList.find({loginCookies:req.cookies.managerId});
+	var check = await userList.find({loginCookies:req.cookies.userId});
 
 	if (check.length != 0){		
 		var userName = await userList.find({_id:req.cookies.userId});
@@ -888,7 +895,7 @@ router.get('/healthrecommend', async (req, res) => {
 	var userList = dbo.get('userList');
 	var data = [];
 
-	var check = await userList.find({loginCookies:req.cookies.managerId});
+	var check = await userList.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){	
 		var userName = await userList.find({_id:req.cookies.userId});
@@ -935,7 +942,7 @@ router.post('/customizerecommend', express.urlencoded({ extended: true }), async
 
 	var userList = dbo.get('userList');
 
-	var check = await userList.find({loginCookies:req.cookies.managerId});
+	var check = await userList.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){		
 		var filter = await menu.find({});
@@ -967,7 +974,7 @@ router.get('/randomrecommendfood', async (req, res) => {
 	
 	var userList = dbo.get('userList');
 
-	var check = await userList.find({loginCookies:req.cookies.managerId});
+	var check = await userList.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){	
 		var menu = await menuList.find({});
@@ -992,7 +999,7 @@ router.get('/randomrecommenddrink', async (req, res) => {
 	
 	var userList = dbo.get('userList');
 
-	var check = await userList.find({loginCookies:req.cookies.managerId});
+	var check = await userList.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){	
 		var menu = await menuList.find({});
@@ -1020,7 +1027,7 @@ router.get('/chartanalysis', async (req, res) => {
 	var data = [];
 	
 
-	var check = await userList.find({loginCookies:req.cookies.managerId});
+	var check = await userList.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){	
 		var userName = await userList.find({_id:req.cookies.userId});
@@ -1056,7 +1063,7 @@ router.post('/addcustomerhistory', express.urlencoded({ extended: true }), async
 
 	var foodId = req.body.foodid;
 	var isValid = true;
-	var check = await userList.find({loginCookies:req.cookies.managerId});
+	var check = await userList.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){	
 		for (var key in req.body) {
@@ -1098,7 +1105,7 @@ router.delete('/deletecustomerhistory/:historyid', express.urlencoded({ extended
 
     var id = req.params.historyid;
 	var userList = db.get('userList');
-	var check = await userList.find({loginCookies:req.cookies.managerId});
+	var check = await userList.find({loginCookies:req.cookies.loginSession});
 
 	if (check.length != 0){	
 		history.remove({_id:id}).then(()=>{
