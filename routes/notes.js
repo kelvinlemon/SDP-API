@@ -680,7 +680,7 @@ router.post('/csignin', express.urlencoded({ extended: true }), async (req, res)
 router.get('/clogout', async (req, res) => {
 	var dbo = req.db;
 	var List = dbo.get('managerList');
-	await List.update({loginCookies:req.cookies.userId},{$set:{loginCookies:''}})
+	await List.update({loginCookies:req.cookies.loginSessionU},{$set:{loginCookies:'0'}})
 	res.setHeader('Set-Cookie', [
 		'loginSessionU=; SameSite=None; Secure;',
 		'userId=; SameSite=None; Secure;'
@@ -699,7 +699,7 @@ router.post('/register', express.urlencoded({ extended: true }), async (req, res
 	var role = req.body.role;
 
 
-	var check = await List.find({loginCookies:req.cookies.userId});
+	var check = await List.find({loginCookies:req.cookies.loginSessionU});
 
 	if (check.length != 0 && check[0]['loginCookies'] != '0'){		
 		res.json("Already logined");
@@ -734,7 +734,7 @@ router.get('/chistory',async (req, res) => {
 	var send = [];
 	var userList = dbo.get('userList');
 
-	var check = await userList.find({loginCookies:req.cookies.userId});
+	var check = await userList.find({loginCookies:req.cookies.loginSessionU});
 
 	if (check.length != 0 && check[0]['loginCookies'] != '0'){	
 		var userName = await userList.find({_id:req.cookies.userId});
