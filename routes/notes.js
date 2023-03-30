@@ -1170,6 +1170,7 @@ router.post('/toorder', express.urlencoded({ extended: true }), async (req, res)
     var menu = db.get('menuList');
 	var tableinfo = db.get('tableList');
     var send= [];
+	console.log(req.body.length);
 	if (req.body.length == 2){
     	var table = req.body.table;
 		var session = req.body.session;
@@ -1182,6 +1183,7 @@ router.post('/toorder', express.urlencoded({ extended: true }), async (req, res)
 	if (doc[0]['status'] != '0'){
 		send = await menu.find({});
 		var milliseconds = 28800000; //8hours
+		send.push()
 		res.setHeader('Set-Cookie', [
 			'session=' + session + '; SameSite=None; Secure; maxAge: ' + milliseconds,
 			'table=' + table + '; SameSite=None; Secure; maxAge: ' + milliseconds
