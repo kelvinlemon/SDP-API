@@ -396,10 +396,11 @@ router.delete('/cancelfood/:table/', express.urlencoded({ extended: true }), asy
 						}
 					}
 				}
+				var order ="";
 				if (orderData[0] == "undefined"){
-					var order = "";
+					order = "";
 				}else{				
-					var order = ""+ orderData[0];
+					order = ""+ orderData[0];
 				}	
 				for (let i = 1; i< orderData.length; i++){
 					order = order+" "+orderData[i];
@@ -1290,9 +1291,8 @@ router.post('/submit', express.urlencoded({ extended: true }), async (req, res) 
 		if (Object.keys(req.body).length != 1){
 			isValid = false;
 		}
-		
+
 		if (isValid){
-			var doc = await tableinfo.find({table:table});
 			if (doc[0]['status'] != '0'){
 				if (doc[0]['orderedFood'] != ""){
 					order = foodAddArrange(doc[0]["orderedFood"], order);
