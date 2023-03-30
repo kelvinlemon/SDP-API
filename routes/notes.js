@@ -1170,8 +1170,7 @@ router.post('/toorder', express.urlencoded({ extended: true }), async (req, res)
     var menu = db.get('menuList');
 	var tableinfo = db.get('tableList');
     var send= [];
-	console.log(req.body.length);
-	if (req.body.length == 2){
+	if (Object.keys(req.body).length == 2){
     	var table = req.body.table;
 		var session = req.body.session;
 	}else{
