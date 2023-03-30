@@ -1290,10 +1290,7 @@ router.post('/submit', express.urlencoded({ extended: true }), async (req, res) 
 		if (Object.keys(req.body).length != 1){
 			isValid = false;
 		}
-
-		if (tableValidCheck[0]['table'] != table){
-			isValid = false;
-		}
+		
 		if (isValid){
 			var doc = await tableinfo.find({table:table});
 			if (doc[0]['status'] != '0'){
