@@ -287,7 +287,7 @@ router.get('/currentorderpage', async (req, res) => {
 						price += parseInt(food[0]['price']) * parseInt(tableFood[j+1]);
 					}
 				}
-				send.push({"table":docs[i]["table"], "status":docs[i]["status"], "price":price});
+				send.push({"tableId":docs[i]["_id"],"table":docs[i]["table"], "status":docs[i]["status"], "price":price});
 			}
 			res.json(send);
 		}).catch((error)=>{
