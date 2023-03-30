@@ -1184,7 +1184,7 @@ router.post('/toorder', express.urlencoded({ extended: true }), async (req, res)
 		data = await menu.find({});
 		var milliseconds = 28800000; //8hours
 		send.push([data]);
-		send.push([{"table":table, "session":session}])
+		send.push({"table":table, "session":session});
 		res.setHeader('Set-Cookie', [
 			'session=' + session + '; SameSite=None; Secure; maxAge: ' + milliseconds,
 			'table=' + table + '; SameSite=None; Secure; maxAge: ' + milliseconds
