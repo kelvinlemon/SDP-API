@@ -751,7 +751,7 @@ router.get('/chistory',async (req, res) => {
 		userHistory.find({userName:userName[0]['userName']}).then(async (docs)=>{
 			for (let i = 0;i < docs.length; i++){
 				var docs2 = await menuList.find({_id:docs[i]['history']}).catch((error)=>{res.json(error)});
-				send.push({"id":docs2[0]['_id'],"foodName":docs2[0]['foodName'], "description":docs2[0]['description'],"Price":docs2[0]['price'], "time":docs[i]['time']});
+				send.push({"historyId":docs[0]['_id'],"foodName":docs2[0]['foodName'], "description":docs2[0]['description'],"Price":docs2[0]['price'], "time":docs[i]['time']});
 			}
 			res.json(send);
 		}).catch((error)=>{res.json(error)});
