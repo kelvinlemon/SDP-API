@@ -1153,6 +1153,58 @@ router.post("/askhealthquestion", express.urlencoded({ extended: true }), async 
 	}
   });
 
+router.get("/aiAnalysisChart", express.urlencoded({ extended: true }), async (req, res) => {
+try {
+	var dbo = req.db;
+	var userHistory = dbo.get('userHistoryList');
+	var menuList = dbo.get('menuList');
+	var userList = dbo.get('userList');
+	var data = [];
+	
+
+	var check = await userList.find({loginCookies:req.cookies.loginSessionU});
+
+	if (check.length != 0 && check[0]['loginCookies'] != '0'){	
+		var userName = await userList.find({_id:req.cookies.userId});
+		userHistory.find({userName:userName[0]['userName']}).then(async (docs)=>{
+			for (let i = 0;i < docs.length; i++){
+				var docs2 = await menuList.find({_id:docs[i]['history']}).catch((error)=>{res.json(error)});
+				data.push({"foodName":docs2[0]['foodName'], "description":docs2[0]['description'],"Price":docs2[0]['price'], "time":docs[i]['time'], 
+				"foodClass": docs2[0]['foodClass'], "healthTag":docs2[0]['healthTag'], "set":docs2[0]['set'], "drink":docs[0]['drink']});
+			}
+			if (data.length != 0){
+				var analysisData = filterDataByDate(data);
+				var foodClassData = [];
+				for (let i = 0 ; i < analysisData.length; i++){
+					foodClassData = foodClassData.concat(analysisData[i]['foodClass'].split(" "));
+				} 
+				var percentages = percentageAnalysis(foodClassData)
+				const response = await openai.createChatCompletion({
+					model: "gpt-3.5-turbo",
+					messages: [{ "role": "user", "content": 'Act as a AI health assistant, analysis the data for me and give health advise, *1:Grains, 2:Vegetables, 3:Fruits, 4:“Meat, fish, egg and alternatives”, 5:“milk and alternatives”, 6:“food and drinks with high Fat/ oil, salt and sugar” *  :'+percentages }],
+				})
+			
+				return res.status(200).json({
+				success: true,
+				data: response.data.choices[0].message.content,
+				});
+			}else{
+				res.json("No history can make use to analysis!");
+			}
+		}).catch((error)=>{res.json(error)});
+	}else{
+		res.json("Haven't login");
+	}
+	} catch (error) {
+		return res.status(400).json({
+		success: false,
+		error: error.response
+			? error.response.data
+			: "There was an issue on the server",
+		});
+	}
+});
+
 /*function getUniqueTypes(data) {
 	const types = new Set();
 	const uniqueTypes = [];
