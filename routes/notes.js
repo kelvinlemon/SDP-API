@@ -852,7 +852,7 @@ function percentageAnalysis(data){
 
 	for (var key in counts) {
 		var percentage = ((counts[key] / totalCount) * 100).toFixed(2);
-		percentages.push({value: key, percentage: percentage});
+		percentages.push({value: key, percentage: parseInt(percentage)});
 	}
 
 	return percentages;
