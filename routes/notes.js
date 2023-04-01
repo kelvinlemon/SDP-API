@@ -1178,10 +1178,16 @@ try {
 				for (let i = 0 ; i < analysisData.length; i++){
 					foodClassData = foodClassData.concat(analysisData[i]['foodClass'].split(" "));
 				} 
-				var percentages = percentageAnalysis(foodClassData)
+				var percentages = percentageAnalysis(foodClassData);
+				let str = '';
+				for (const obj of percentages) {
+					for (const [key, value] of Object.entries(obj)) {
+						str += `${key}: ${value}, `;
+					}
+				}
 				const response = await openai.createChatCompletion({
 					model: "gpt-3.5-turbo",
-					messages: [{ "role": "user", "content": 'Act as a AI health assistant, analysis the data for me and give health advise, *1:Grains, 2:Vegetables, 3:Fruits, 4:“Meat, fish, egg and alternatives”, 5:“milk and alternatives”, 6:“food and drinks with high Fat/ oil, salt and sugar” *', 'data':percentages}],
+					messages: [{ "role": "user", "content": 'Act as a AI health assistant, analysis the data for me and give health advise, *1:Grains, 2:Vegetables, 3:Fruits, 4:“Meat, fish, egg and alternatives”, 5:“milk and alternatives”, 6:“food and drinks with high Fat/ oil, salt and sugar” *'+str}],
 				})
 			
 				return res.status(200).json({
