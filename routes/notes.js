@@ -289,9 +289,11 @@ router.get('/currentorderpage', async (req, res) => {
 				}
 				send.push({"tableId":docs[i]["_id"],"table":docs[i]["table"], "status":docs[i]["status"], "price":price});
 			}
+			
 			res.json(send);
 		}).catch((error)=>{
 			res.json(error);
+
 		})
 	}else{
 		res.json('Not logined!');
@@ -489,7 +491,8 @@ router.post('/search', express.urlencoded({ extended: true }), async (req, res) 
 			}else{
 				var send = searchHistory(docs, day, month, year);
 				if (send.length == 0){
-					res.json("There is not matched result");
+					//res.json("There is not matched result");
+					res.json([]);
 				}else{
 					res.json(send);
 				}
@@ -516,7 +519,8 @@ router.get('/clickhistorytable/:historyid/', async (req, res) => {
 	if (check.length != 0 && check[0]['loginCookies'] != '0'){	
     	var doc = await history.find({_id:id});
 		if (!doc || doc.length == 0){
-			res.json("history not found");
+			//res.json("history not found");
+			res.json([]);
 		}else{
 			var orderData = doc[0]['orderedFood'].split(" ");
 			for (let i = 0; i < orderData.length; i+=2){
@@ -926,7 +930,8 @@ router.get('/healthrecommend', async (req, res) => {
 				var recommend = filter[getRandomInt(filter.length)]; // randomly select a food for the user according to what he eat less in the food pyramid
 				res.json(recommend);
 			}else{
-				res.json("No history can make use to analysis!");
+				//res.json("No history can make use to analysis!");
+				res.json([]);
 			}
 		}).catch((error)=>{res.json(error)});
 	}else{
@@ -1058,7 +1063,8 @@ router.get('/chartanalysis', async (req, res) => {
 				var percentages = percentageAnalysis(foodClassData)
 				res.json(percentages);
 			}else{
-				res.json("No history can make use to analysis!");
+				//res.json("No history can make use to analysis!");
+				res.json([]);
 			}
 		}).catch((error)=>{res.json(error)});
 	}else{
@@ -1132,24 +1138,36 @@ router.delete('/deletecustomerhistory/:historyid', express.urlencoded({ extended
 
 /* "Open AI health suggestion" action ------------------------------------------------------*/
 router.post("/askhealthquestion", express.urlencoded({ extended: true }), async (req, res) => {
-	try {
-	  var question=req.body.question;
-	  const response = await openai.createChatCompletion({
-		  model: "gpt-3.5-turbo",
-		  messages: [{ "role": "user", "content": 'Act as a AI health assistant, if the following question is not about health just reply me "I will only reply you with a health question!:" '+question }],
-		})
-  
-	  return res.status(200).json({
-		success: true,
-		data: response.data.choices[0].message.content,
-	  });
-	} catch (error) {
-	  return res.status(400).json({
-		success: false,
-		error: error.response
-		  ? error.response.data
-		  : "There was an issue on the server",
-	  });
+	var dbo = req.db;
+	var userList = dbo.get('userList');
+
+	var check = await userList.find({loginCookies:req.cookies.loginSessionU});
+
+	if (check.length != 0 && check[0]['loginCookies'] != '0'){
+		try {
+		var question=req.body.question;
+		const response = await openai.createChatCompletion({
+			model: "gpt-3.5-turbo",
+			messages: [{ "role": "user", "content": 'Act as a AI health assistant, if the following question is not about health just reply me "I will only reply you with a health question!:" '+question }],
+			})
+	
+		return res.status(200).json({
+			success: true,
+			data: response.data.choices[0].message.content,
+		});
+		} catch (error) {
+		return res.status(400).json({
+			success: false,
+			error: error.response
+			? error.response.data
+			: "There was an issue on the server",
+		});
+		}
+	}else{
+		return res.status(404).json({
+			success: true,
+			data: "Haven't login!",
+			});
 	}
   });
 
@@ -1195,11 +1213,17 @@ try {
 				data: response.data.choices[0].message.content,
 				});
 			}else{
-				res.json("No history can make use to analysis!");
+				return res.status(200).json({
+					success: true,
+					data: "No history can make use to analysis!",
+					});
 			}
 		}).catch((error)=>{res.json(error)});
 	}else{
-		res.json("Haven't login");
+		return res.status(404).json({
+			success: true,
+			data: "Haven't login!",
+			});
 	}
 	} catch (error) {
 		return res.status(400).json({
@@ -1283,13 +1307,15 @@ router.get('/ordered', async (req, res) => {
 			if (send.length != 0){
 				res.json(send);
 			}else{
-				res.json("No ordered food");
+				//res.json("No ordered food");
+				res.json([]);
 			}
 		}else{
-			res.json("No ordered food");
+			//res.json("No ordered food");
+			res.json([]);
 		}
 	}else{
-		res.json("Table "+ table +" is disabled or sessionCode is invalid!");
+		res.json("Session is invalid!");
 	}
 });
 
