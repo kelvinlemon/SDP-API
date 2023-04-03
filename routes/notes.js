@@ -254,7 +254,7 @@ router.get('/enable/:table', async (req, res) => {
 						res.json(error);
 					})
 				}else{
-					res.json([{"alreadyEnableedURL":'/toorder', "data":{"table":table,"session":docs[0]["sessionCode"]}}]);
+					res.json([{"URL":'/toorder', "data":{"table":table,"session":docs[0]["sessionCode"]}}]);
 				}
 			}).catch((error)=>{
 				res.json(error);
