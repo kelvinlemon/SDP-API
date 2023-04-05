@@ -693,7 +693,7 @@ router.post('/csignin', express.urlencoded({ extended: true }), async (req, res)
 /* Customer logout ------------------------------------------------------*/
 router.get('/clogout', async (req, res) => {
 	var dbo = req.db;
-	var List = dbo.get('managerList');
+	var List = dbo.get('userList');
 	await List.update({loginCookies:req.cookies.loginSessionU},{$set:{loginCookies:'0'}})
 	res.setHeader('Set-Cookie', [
 		'loginSessionU=; SameSite=None; Secure;',
