@@ -949,7 +949,7 @@ function filterByKey(data, key, keyValue){
 	return filter;
 }
 
-/* "customized recommend" action ------------------------------------------------------*/
+/* "customized recommend" action, not in use------------------------------------------------------*/
 router.post('/customizerecommend', express.urlencoded({ extended: true }), async (req, res) => {
 	var dbo = req.db;
 	var menu = dbo.get('menuList');
