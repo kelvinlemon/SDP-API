@@ -741,7 +741,7 @@ router.post('/register', express.urlencoded({ extended: true }), async (req, res
 });
 
 /* Customer history ------------------------------------------------------*/
-router.get('/chistory',async (req, res) => {
+router.get('/chistory',express.urlencoded({ extended: true }), async (req, res) => {
 	var dbo = req.db;
 	var userHistory = dbo.get('userHistoryList');
 	var menuList = dbo.get('menuList');
@@ -901,7 +901,7 @@ function getRandomInt(max) {
 }
 
 /* "health recommend" action ------------------------------------------------------*/
-router.get('/healthrecommend', async (req, res) => {
+router.get('/healthrecommend', express.urlencoded({ extended: true }), async (req, res) => {
 	var dbo = req.db;
 	var userHistory = dbo.get('userHistoryList');
 	var menuList = dbo.get('menuList');
@@ -985,7 +985,7 @@ router.post('/customizerecommend', express.urlencoded({ extended: true }), async
 })
 
 /* "random recommend food" action ------------------------------------------------------*/
-router.get('/randomrecommendfood', async (req, res) => {
+router.get('/randomrecommendfood', express.urlencoded({ extended: true }),async (req, res) => {
 	var dbo = req.db;
 	var menuList = dbo.get('menuList');
 	
@@ -1010,7 +1010,7 @@ router.get('/randomrecommendfood', async (req, res) => {
 });
 
 /* "random recommend drink" action ------------------------------------------------------*/
-router.get('/randomrecommenddrink', async (req, res) => {
+router.get('/randomrecommenddrink', express.urlencoded({ extended: true }),async (req, res) => {
 	var dbo = req.db;
 	var menuList = dbo.get('menuList');
 	
@@ -1280,7 +1280,7 @@ router.post('/toorder', express.urlencoded({ extended: true }), async (req, res)
 
 
 /* "Ordered" page data ------------------------------------------------------*/
-router.get('/ordered', async (req, res) => {
+router.get('/ordered', express.urlencoded({ extended: true }), async (req, res) => {
     var db = req.db;
     var menuList = db.get('menuList');
 	var tableinfo = db.get('tableList');
