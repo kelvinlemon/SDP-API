@@ -1197,7 +1197,7 @@ try {
 					foodClassData = foodClassData.concat(analysisData[i]['foodClass'].split(" "));
 				} 
 				var percentages = percentageAnalysis(foodClassData);
-				let str = '';
+				var str = '';
 				for (const obj of percentages) {
 					for (const [key, value] of Object.entries(obj)) {
 						str += `${key}: ${value}, `;
@@ -1209,8 +1209,8 @@ try {
 				})
 			
 				return res.status(200).json({
-				success: true,
-				data: response.data.choices[0].message.content,
+					success: true,
+					data: response.data.choices[0].message.content,
 				});
 			}else{
 				return res.status(200).json({
@@ -1218,21 +1218,21 @@ try {
 					data: "No history can make use to analysis!",
 					});
 			}
-		}).catch((error)=>{res.json(error)});
+		})
 	}else{
 		return res.status(404).json({
 			success: true,
 			data: "Haven't login!",
 			});
-	}
-	} catch (error) {
-		return res.status(400).json({
-		success: false,
-		error: error.response
-			? error.response.data
-			: "There was an issue on the server",
-		});
-	}
+		}
+} catch (error) {
+	return res.status(400).json({
+	success: false,
+	data: error.response
+		? error.response.data
+		: "There was an issue on the server",
+	});
+}
 });
 
 /*function getUniqueTypes(data) {
