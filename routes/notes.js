@@ -1206,7 +1206,7 @@ try {
 				try{
 					const response = await openai.createChatCompletion({
 						model: "gpt-3.5-turbo",
-						messages: [{ "role": "user", "content": 'Act as a AI health assistant, analysis the data for me and reply me with less than 50 words'}],
+						messages: [{ "role": "user", "content": 'Act as a AI health assistant, hi'}],
 						})
 				
 					res.status(200).json({
