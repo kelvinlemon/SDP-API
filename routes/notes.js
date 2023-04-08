@@ -1210,7 +1210,7 @@ try {
 			
 				return res.status(200).json({
 					success: true,
-					data: response.data.choices[0].message.content,
+					data: response,//.data.choices[0].message.content,
 				});
 			}else{
 				return res.status(200).json({
