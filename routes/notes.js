@@ -1205,12 +1205,12 @@ try {
 				}
 				const response = await openai.createChatCompletion({
 					model: "gpt-3.5-turbo",
-					messages: [{ "role": "user", "content":`Act as a AI health assistant, analyze the data for me and give health advice: *1. Grains, 2. Vegetables, 3. Fruits, 4. "Meat, fish, egg and alternatives", 5. "milk and alternatives", 6. "food and drinks with high Fat/oil, salt and sugar" *: ${str}` }],
+					messages: [{ "role": "user", "content":`Act as a AI health assistant, analyze the data for me and give health advice in 50 words: *1. Grains, 2. Vegetables, 3. Fruits, 4. "Meat, fish, egg and alternatives", 5. "milk and alternatives", 6. "food and drinks with high Fat/oil, salt and sugar" *: ${str}` }],
 				})
 			
 				return res.status(200).json({
 					success: true,
-					data: response,//.data.choices[0].message.content,
+					data: response.data.choices[0].message.content,
 				});
 			}else{
 				return res.status(200).json({
