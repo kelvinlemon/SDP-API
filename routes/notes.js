@@ -1183,7 +1183,7 @@ try {
 	var check = await userList.find({loginCookies:req.cookies.loginSessionU});
 
 	if (check.length != 0 && check[0]['loginCookies'] != '0'){	
-		var userName = await userList.find({_id:req.cookies.userId});
+		var userName = await userList.find({loginCookies:req.cookies.loginSessionU});
 		userHistory.find({userName:userName[0]['userName']}).then(async (docs)=>{
 			for (let i = 0;i < docs.length; i++){
 				var docs2 = await menuList.find({_id:docs[i]['history']}).catch((error)=>{res.json(error)});
