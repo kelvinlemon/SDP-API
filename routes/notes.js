@@ -1210,12 +1210,12 @@ try {
 						max_tokens:150,
 					})
 				
-					return res.status(200).json({
+					res.status(200).json({
 						success: true,
 						data: response.data.choices[0].message.content,
 					});
 				}catch (error){
-					return res.status(200).json({
+					res.status(200).json({
 						success: true,
 						data: error,
 					});
