@@ -1204,14 +1204,14 @@ try {
 					}
 				} 
 				try{
-					/*const response = await openai.createChatCompletion({
+					const response = await openai.createChatCompletion({
 						model: "gpt-3.5-turbo",
-						messages: [{ "role": "user", "content": `Act as a AI health assistant, analyze the data for me and give health advice in 50 words - 1. Grains, 2. Vegetables, 3. Fruits, 4. "Meat, fish, egg and alternatives", 5. "milk and alternatives", 6. "food and drinks with high Fat/oil, salt and sugar": ${str}`}],
-					});*/
+						messages: [{ "role": "user", "content": 'Act as a AI health assistant reply me with only less than 50 words, 1=Grains 2=Vegetables 3=Fruits 4=Meat, fish, egg and alternatives 5= milk and alternatives 6=food and drinks with high Fat/oil, salt and sugar, data:' +str}],
+						})
 				
 					res.status(200).json({
 						success: true,
-						data: 'hi',
+						data: response.data.choices[0].message.content,
 					});
 				}catch (error){
 					res.status(200).json({
