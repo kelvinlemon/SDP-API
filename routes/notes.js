@@ -1148,7 +1148,7 @@ router.post("/askhealthquestion", express.urlencoded({ extended: true }), async 
 		var question=req.body.question;
 		const response = await openai.createChatCompletion({
 			model: "gpt-3.5-turbo",
-			messages: [{ "role": "user", "content": 'Act as an AI health assistant reply me in 50 words, if the following question is not about health just reply me "I will only reply you with a health question! question:" '+question }],
+			messages: [{ "role": "user", "content": 'Act as an AI health assistant and reply to me in 50 words, if the following question is not about health just reply to me "I will only reply to you with a health question! question:" '+question }],
 			})
 	
 		return res.status(200).json({
