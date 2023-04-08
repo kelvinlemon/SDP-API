@@ -1211,7 +1211,7 @@ try {
 				
 					res.status(200).json({
 						success: true,
-						data: response.data.choices[0].text,
+						data: response.choices[0].text,
 					});
 				}catch (error){
 					res.status(200).json({
