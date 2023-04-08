@@ -1148,9 +1148,7 @@ router.post("/askhealthquestion", express.urlencoded({ extended: true }), async 
 		var question=req.body.question;
 		const response = await openai.createChatCompletion({
 			model: "gpt-3.5-turbo",
-			messages: [
-				{"role": "system", "content":"Act as an AI health assistant and provide a response in under 50 words."},
-				{ "role": "user", "content": 'If the following question is not about health just reply me "I will only reply you with a health question!:" '+question }],
+			messages: [{ "role": "user", "content": 'Act as a AI health assistant reply me in 50 words, if the following question is not about health just reply me "I will only reply you with a health question!:" '+question }],
 			})
 	
 		return res.status(200).json({
@@ -1209,8 +1207,7 @@ try {
 					const response = await openai.createChatCompletion({
 						model: "gpt-3.5-turbo",
 						messages: [
-							{"role": "system", "content":"Act as an AI health assistant and provide a response in under 50 words."},
-							{ "role": "user", "content": 'Analysis my data for me and reply me with a health suggestion, 1=Grains 2=Vegetables 3=Fruits 4=Meat, fish, egg and alternatives 5= milk and alternatives 6=food and drinks with high Fat/oil, salt and sugar, data:' +str}],
+							{ "role": "user", "content": 'Analysis the data for me and reply me with a health suggestion in 50 words, 1=Grains 2=Vegetables 3=Fruits 4=Meat, fish, egg and alternatives 5= milk and alternatives 6=food and drinks with high Fat/oil, salt and sugar, data:' +str}],
 						})
 				
 					res.status(200).json({
